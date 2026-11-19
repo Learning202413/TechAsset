@@ -10,6 +10,8 @@ export default function InputField({
   disabled = false,
   rows = null,
 }) {
+  const errorId = `${name}-error`;
+
   return (
     <div className="mb-4">
       {label && (
@@ -17,7 +19,7 @@ export default function InputField({
           htmlFor={name}
           className="block mb-1.5 text-sm font-medium text-gray-700"
         >
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-red-500" aria-hidden="true">*</span>}
         </label>
       )}
 
@@ -31,6 +33,8 @@ export default function InputField({
           disabled={disabled}
           rows={rows}
           onChange={onChange}
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           className={`w-full px-3 py-2 border rounded-lg text-sm outline-none transition focus:ring-2 bg-white text-gray-800 ${
             error
               ? "border-red-500 focus:ring-red-200"
@@ -47,6 +51,8 @@ export default function InputField({
           required={required}
           disabled={disabled}
           onChange={onChange}
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           className={`w-full px-3 py-2 border rounded-lg text-sm outline-none transition focus:ring-2 bg-white text-gray-800 ${
             error
               ? "border-red-500 focus:ring-red-200"
@@ -56,7 +62,9 @@ export default function InputField({
       )}
 
       {error && (
-        <p className="text-red-500 text-xs mt-1 font-medium">{error}</p>
+        <p id={errorId} role="alert" className="text-red-500 text-xs mt-1 font-medium">
+          {error}
+        </p>
       )}
     </div>
   );

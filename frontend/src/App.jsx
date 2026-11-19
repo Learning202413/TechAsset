@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import MainLayout from "./layouts/MainLayout";
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import EquiposList from "./pages/EquiposList";
 import CreateEquipo from "./pages/CreateEquipo";
@@ -10,19 +13,75 @@ import CreateUsuario from "./pages/CreateUsuario";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <MainLayout>
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/equipos" element={<EquiposList />} />
-          <Route path="/equipos/nuevo" element={<CreateEquipo />} />
-          <Route path="/prestamos" element={<PrestamosList />} />
-          <Route path="/prestamos/nuevo" element={<CreatePrestamo />} />
-          <Route path="/usuarios" element={<UsuariosList />} />
-          <Route path="/usuarios/nuevo" element={<CreateUsuario />} />
+          {/* Public Landing & Login Pages */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* Authenticated Application Modules wrapped in MainLayout */}
+          <Route
+            path="/dashboard"
+            element={
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/equipos"
+            element={
+              <MainLayout>
+                <EquiposList />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/equipos/nuevo"
+            element={
+              <MainLayout>
+                <CreateEquipo />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/prestamos"
+            element={
+              <MainLayout>
+                <PrestamosList />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/prestamos/nuevo"
+            element={
+              <MainLayout>
+                <CreatePrestamo />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/usuarios"
+            element={
+              <MainLayout>
+                <UsuariosList />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/usuarios/nuevo"
+            element={
+              <MainLayout>
+                <CreateUsuario />
+              </MainLayout>
+            }
+          />
+
+          {/* Catch-all redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </MainLayout>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

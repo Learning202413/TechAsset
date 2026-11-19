@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import PageContainer from "../components/PageContainer";
 import StatsCard from "../components/StatsCard";
 import StatusBadge from "../components/StatusBadge";
 import Button from "../components/Button";
@@ -14,25 +13,33 @@ import {
   Building2, 
   TrendingUp, 
   PlusCircle,
-  RefreshCw
+  RefreshCw,
+  Layers,
+  Sparkles,
+  ChevronRight,
+  ShieldAlert,
+  ArrowUpRight
 } from "lucide-react";
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
 
-  const loadData = async () => {
+  const loadData = async (manual = false) => {
     try {
-      setIsLoading(true);
+      if (manual) setIsRefreshing(true);
+      else setIsLoading(true);
       setError("");
       const data = await getDashboardStats();
       setStats(data);
     } catch (err) {
       console.error(err);
-      setError("No se pudieron cargar los indicadores del sistema.");
+      setError("No se pudieron conectar los indicadores con el servidor Kestrel / PostgreSQL.");
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -42,194 +49,362 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="p-12 text-center text-gray-500">
-        <RefreshCw className="w-8 h-8 animate-spin mx-auto text-blue-600 mb-3" />
-        <p className="font-medium">Cargando indicadores del sistema...</p>
+      <div className="min-h-[480px] flex flex-col items-center justify-center p-12 text-slate-500 space-y-4">
+        <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100 shadow-sm animate-pulse">
+          <RefreshCw className="w-8 h-8 animate-spin text-blue-600" />
+        </div>
+        <div className="text-center">
+          <p className="text-base font-bold text-slate-800">Sincronizando Dashboard Ejecutivo...</p>
+          <p className="text-xs text-slate-500 mt-1">Consultando métricas en PostgreSQL mediante Kestrel API</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-8 bg-red-50 text-red-700 rounded-xl border border-red-200">
-        <p className="font-semibold">{error}</p>
-        <Button onClick={loadData} variant="outline" className="mt-4">
-          Reintentar
+      <div className="p-8 bg-red-50 text-red-700 rounded-2xl border border-red-200/80 max-w-2xl mx-auto my-12 text-center space-y-4 shadow-sm">
+        <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 mx-auto flex items-center justify-center">
+          <ShieldAlert className="w-6 h-6" />
+        </div>
+        <div>
+          <h3 className="text-base font-bold text-red-900">Interrupción de Comunicación</h3>
+          <p className="text-xs text-red-700 mt-1">{error}</p>
+        </div>
+        <Button onClick={() => loadData(true)} variant="primary" className="mx-auto">
+          <RefreshCw className="w-4 h-4" />
+          Reintentar Sincronización
         </Button>
       </div>
     );
   }
 
+  const disponibilidadPorcentaje = stats.totalEquipos > 0
+    ? Math.round((stats.equiposDisponibles / stats.totalEquipos) * 100)
+    : 0;
+
   return (
     <div className="space-y-8">
-      {/* Header Container */}
-      <PageContainer
-        title="Dashboard General de Operaciones"
-        subtitle="Monitoreo en tiempo real de inventario tecnológico y préstamos institucionales (Innovatech Solutions S.A.C.)"
-        actions={
-          <div className="flex gap-2">
-            <Link to="/prestamos/nuevo">
-              <Button variant="primary">
-                <PlusCircle className="w-4 h-4" />
-                Nuevo Préstamo
-              </Button>
-            </Link>
-            <Button onClick={loadData} variant="secondary">
-              <RefreshCw className="w-4 h-4" />
-              Actualizar
-            </Button>
+      {/* Executive Welcome & Norman Affordance Actions Banner */}
+      <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-blue-950 p-6 lg:p-8 rounded-3xl text-white shadow-xl shadow-slate-950/10 border border-slate-800 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold bg-blue-500/20 text-blue-300 border border-blue-400/30">
+            <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+            Monitoreo en Tiempo Real &bull; ISO 9241-110
           </div>
-        }
-      >
-        {/* KPI Grid - Requerimiento 10 del Caso Práctico */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-white">
+            Panel de Operaciones TI
+          </h1>
+          <p className="text-xs lg:text-sm text-slate-300 max-w-2xl leading-relaxed">
+            Gestión institucional integral de activos tecnológicos, control de asignaciones y métricas de rotación para Innovatech Solutions S.A.C.
+          </p>
+        </div>
+
+        {/* Norman Affordances: Clear, prominent primary actions */}
+        <div className="flex flex-wrap items-center gap-3">
+          <Link to="/prestamos/nuevo">
+            <button
+              type="button"
+              className="px-4 py-2.5 rounded-xl font-semibold text-xs text-white bg-blue-600 hover:bg-blue-500 active:scale-98 transition shadow-lg shadow-blue-600/30 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Nuevo Préstamo</span>
+            </button>
+          </Link>
+
+          <Link to="/equipos/nuevo">
+            <button
+              type="button"
+              className="px-4 py-2.5 rounded-xl font-semibold text-xs text-slate-200 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
+            >
+              <Laptop className="w-4 h-4 text-blue-400" />
+              <span>Registrar Equipo</span>
+            </button>
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => loadData(true)}
+            disabled={isRefreshing}
+            className="p-2.5 rounded-xl text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 transition border border-slate-700/80 disabled:opacity-50"
+            title="Actualizar indicadores del sistema"
+            aria-label="Actualizar indicadores del sistema"
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-blue-400" : ""}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* Grid of 6 KPIs (RF-13: Métricas de Control de Activos) */}
+      <section aria-label="Indicadores clave de rendimiento">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           <StatsCard
-            title="Total de Equipos"
+            title="Total Activos"
             value={stats.totalEquipos}
-            description="Registrados en inventario"
+            description="Equipos inventariados"
+            badge="Catálogo Global"
             icon={Laptop}
             color="blue"
           />
           <StatsCard
-            title="Equipos Disponibles"
+            title="Disponibles"
             value={stats.equiposDisponibles}
             description="Listos para préstamo"
+            badge={`${disponibilidadPorcentaje}% Capacidad`}
             icon={CheckCircle2}
             color="emerald"
           />
           <StatsCard
-            title="Equipos Prestados"
+            title="En Préstamo"
             value={stats.equiposPrestados}
-            description="Actualmente asignados"
+            description="Asignados a usuarios"
+            badge="Custodia Activa"
             icon={Clock}
             color="purple"
           />
           <StatsCard
-            title="En Mantenimiento"
+            title="Mantenimiento"
             value={stats.equiposEnMantenimiento}
-            description="Fuera de servicio"
+            description="En revisión técnica"
+            badge="No Prestables"
             icon={AlertTriangle}
             color="amber"
           />
           <StatsCard
-            title="Total de Préstamos"
+            title="Historial Préstamos"
             value={stats.totalPrestamos}
-            description={`${stats.prestamosActivos} en curso`}
+            description={`${stats.prestamosActivos} activos en curso`}
+            badge="RF-11"
             icon={ArrowLeftRight}
             color="indigo"
           />
           <StatsCard
-            title="Área con Mayor Uso"
+            title="Área Mayor Uso"
             value={stats.areaConMayorUso}
-            description={`${stats.areaMayorUsoCantidad} préstamos`}
+            description={`${stats.areaMayorUsoCantidad} solicitudes`}
+            badge="RF-16"
             icon={Building2}
             color="rose"
           />
         </div>
-      </PageContainer>
+      </section>
 
-      {/* Analytics Row */}
+      {/* Analytics Row: Distribution by Area (RF-16) & Most Requested Assets (RF-15) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Préstamos por Área (RF-16) */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-blue-600" />
-            Distribución de Préstamos por Área Funcional (RF-16)
-          </h3>
-          {stats.prestamosPorArea?.length === 0 ? (
-            <p className="text-sm text-gray-400 py-6 text-center">No hay registros de préstamos clasificados por área.</p>
-          ) : (
-            <div className="space-y-3">
-              {stats.prestamosPorArea.map((item) => (
-                <div key={item.area} className="space-y-1">
-                  <div className="flex justify-between text-sm font-medium">
-                    <span className="text-gray-700">{item.area}</span>
-                    <span className="text-gray-900 font-bold">{item.cantidadPrestamos} préstamos</span>
-                  </div>
-                  <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                    <div
-                      className="bg-blue-600 h-2.5 rounded-full"
-                      style={{
-                        width: `${Math.min(100, (item.cantidadPrestamos / (stats.totalPrestamos || 1)) * 100)}%`,
-                      }}
-                    ></div>
-                  </div>
+        <div className="bg-white p-6 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
+                  <Building2 className="w-5 h-5" />
                 </div>
-              ))}
+                <div>
+                  <h2 className="text-sm font-bold text-slate-900">
+                    Distribución por Área Funcional (RF-16)
+                  </h2>
+                  <p className="text-xs text-slate-500">Demanda departamental acumulada</p>
+                </div>
+              </div>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                {stats.prestamosPorArea?.length || 0} Áreas
+              </span>
             </div>
-          )}
+
+            {stats.prestamosPorArea?.length === 0 ? (
+              <div className="py-12 text-center text-slate-400">
+                <Building2 className="w-10 h-10 mx-auto text-slate-300 mb-2" />
+                <p className="text-sm font-semibold">Sin registros de préstamos por área</p>
+                <p className="text-xs mt-0.5">Los préstamos asignados clasificarán el uso aquí automáticamente.</p>
+              </div>
+            ) : (
+              <div className="space-y-4 my-2">
+                {stats.prestamosPorArea.map((item) => {
+                  const percentage = stats.totalPrestamos > 0
+                    ? Math.round((item.cantidadPrestamos / stats.totalPrestamos) * 100)
+                    : 0;
+
+                  return (
+                    <div key={item.area} className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-semibold text-slate-700">{item.area}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-slate-900">
+                            {item.cantidadPrestamos} {item.cantidadPrestamos === 1 ? "préstamo" : "préstamos"}
+                          </span>
+                          <span className="text-[11px] font-semibold text-blue-600 font-mono bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">
+                            {percentage}%
+                          </span>
+                        </div>
+                      </div>
+                      <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden shadow-inner">
+                        <div
+                          className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${Math.max(percentage, 4)}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Fuente: Módulo de Préstamos TechAsset</span>
+            <span className="font-semibold text-slate-700">Total: {stats.totalPrestamos} movimientos</span>
+          </div>
         </div>
 
-        {/* Equipos Más Utilizados (RF-15) */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-emerald-600" />
-            Equipos Más Solicitados en Préstamo (RF-15)
-          </h3>
-          {stats.equiposMasUtilizados?.length === 0 ? (
-            <p className="text-sm text-gray-400 py-6 text-center">Aún no se registran movimientos para determinar equipos populares.</p>
-          ) : (
-            <ul className="divide-y divide-gray-100">
-              {stats.equiposMasUtilizados.map((eq, idx) => (
-                <li key={eq.equipoId} className="py-3 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-blue-50 text-blue-600 font-bold text-xs flex items-center justify-center">
-                      #{idx + 1}
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-800">{eq.nombre}</p>
-                      <p className="text-xs text-gray-500 font-mono">{eq.codigoPatrimonial} &bull; {eq.categoria}</p>
+        {/* Equipos Más Solicitados en Préstamo (RF-15) */}
+        <div className="bg-white p-6 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold text-slate-900">
+                    Equipos Más Solicitados (RF-15)
+                  </h2>
+                  <p className="text-xs text-slate-500">Ranking de rotación e intensidad de uso</p>
+                </div>
+              </div>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                Top Frecuencia
+              </span>
+            </div>
+
+            {stats.equiposMasUtilizados?.length === 0 ? (
+              <div className="py-12 text-center text-slate-400">
+                <Laptop className="w-10 h-10 mx-auto text-slate-300 mb-2" />
+                <p className="text-sm font-semibold">Aún no se registran préstamos recurrentes</p>
+                <p className="text-xs mt-0.5">El ranking se calculará con los movimientos generados.</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-slate-100">
+                {stats.equiposMasUtilizados.map((eq, idx) => {
+                  const medalColors = [
+                    "bg-amber-100 text-amber-800 border-amber-300",
+                    "bg-slate-200 text-slate-800 border-slate-300",
+                    "bg-orange-100 text-orange-800 border-orange-300",
+                  ];
+                  const rankClass = medalColors[idx] || "bg-slate-100 text-slate-600 border-slate-200";
+
+                  return (
+                    <div key={eq.equipoId} className="py-3 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span
+                          className={`w-6 h-6 rounded-full font-bold text-xs flex items-center justify-center shrink-0 border ${rankClass}`}
+                        >
+                          {idx + 1}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-900 truncate">
+                            {eq.nombre}
+                          </p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="font-mono text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-blue-700 border border-slate-200/80">
+                              {eq.codigoPatrimonial}
+                            </span>
+                            <span className="text-[11px] text-slate-500 truncate">
+                              &bull; {eq.categoria}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="text-right shrink-0">
+                        <span className="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-800 rounded-full border border-emerald-200/80 inline-flex items-center gap-1">
+                          <span className="font-bold">{eq.cantidadPrestamos}</span>
+                          <span className="text-[10px] text-emerald-600">préstamos</span>
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <span className="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200">
-                    {eq.cantidadPrestamos} veces prestado
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Análisis de rotación de hardware</span>
+            <Link to="/equipos" className="text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center gap-0.5">
+              <span>Inventario completo</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Historial de Movimientos Recientes (RF-17) */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-indigo-600" />
-            Movimientos y Préstamos Recientes (RF-17)
-          </h3>
-          <Link to="/prestamos" className="text-sm font-medium text-blue-600 hover:text-blue-700">
-            Ver todos los movimientos &rarr;
+      {/* Historial de Movimientos y Préstamos Recientes (RF-17) */}
+      <div className="bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden">
+        <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100">
+              <Clock className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-slate-900">
+                Movimientos y Préstamos Recientes (RF-17)
+              </h2>
+              <p className="text-xs text-slate-500">
+                Últimas operaciones de asignación y devolución registradas en el sistema
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/prestamos"
+            className="text-xs font-bold text-blue-600 hover:text-blue-700 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition border border-transparent hover:border-blue-100"
+          >
+            <span>Ver historial completo</span>
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
         {stats.movimientosRecientes?.length === 0 ? (
-          <p className="text-sm text-gray-400 py-6 text-center">No se registran préstamos en el sistema.</p>
+          <div className="p-12 text-center text-slate-400">
+            <Layers className="w-10 h-10 mx-auto text-slate-300 mb-2" />
+            <p className="text-base font-semibold">No se registran movimientos recientes</p>
+            <p className="text-xs mt-1">Haga clic en 'Nuevo Préstamo' para iniciar la custodia de un activo.</p>
+          </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-gray-50 text-gray-600 uppercase text-[11px] font-semibold border-b border-gray-100">
+            <table className="w-full text-left text-xs" aria-label="Tabla de movimientos recientes">
+              <thead className="bg-slate-50/80 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                 <tr>
-                  <th className="px-4 py-3">Equipo</th>
-                  <th className="px-4 py-3">Responsable</th>
-                  <th className="px-4 py-3">Área</th>
-                  <th className="px-4 py-3">Fecha Préstamo</th>
-                  <th className="px-4 py-3">Estado Préstamo</th>
+                  <th scope="col" className="px-5 py-3.5">Equipo Tecnológico</th>
+                  <th scope="col" className="px-5 py-3.5">Colaborador Responsable</th>
+                  <th scope="col" className="px-5 py-3.5">Área</th>
+                  <th scope="col" className="px-5 py-3.5">Fecha de Asignación</th>
+                  <th scope="col" className="px-5 py-3.5 text-right">Estado</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-gray-700">
+              <tbody className="divide-y divide-slate-100 text-slate-700">
                 {stats.movimientosRecientes.map((m) => (
-                  <tr key={m.id} className="hover:bg-gray-50/50">
-                    <td className="px-4 py-3 font-medium text-gray-900">
-                      <div>{m.equipoNombre}</div>
-                      <div className="text-xs text-gray-400 font-mono">{m.equipoCodigoPatrimonial}</div>
+                  <tr key={m.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="px-5 py-3.5">
+                      <div className="font-semibold text-slate-900">{m.equipoNombre}</div>
+                      <div className="font-mono text-[11px] text-blue-700 font-bold mt-0.5">
+                        {m.equipoCodigoPatrimonial}
+                      </div>
                     </td>
-                    <td className="px-4 py-3">{m.usuarioNombreCompleto}</td>
-                    <td className="px-4 py-3 text-xs text-gray-500">{m.usuarioArea}</td>
-                    <td className="px-4 py-3 text-xs text-gray-500 font-mono">
-                      {new Date(m.fechaPrestamo).toLocaleDateString()} {new Date(m.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px] flex items-center justify-center shrink-0 border border-slate-200">
+                          {m.usuarioNombreCompleto
+                            ? m.usuarioNombreCompleto.substring(0, 2).toUpperCase()
+                            : "TI"}
+                        </div>
+                        <span className="font-medium text-slate-800">{m.usuarioNombreCompleto}</span>
+                      </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-5 py-3.5 text-slate-600">{m.usuarioArea}</td>
+                    <td className="px-5 py-3.5 font-mono text-slate-500">
+                      {new Date(m.fechaPrestamo).toLocaleDateString()} &bull; {new Date(m.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td className="px-5 py-3.5 text-right">
                       <StatusBadge status={m.esActivo ? "Prestado" : "Finalizado"} />
                     </td>
                   </tr>

@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import PageContainer from "../components/PageContainer";
 import StatusBadge from "../components/StatusBadge";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import SelectField from "../components/SelectField";
 import FormMessage from "../components/FormMessage";
 import { getEquipos, updateEstadoEquipo, deleteEquipo } from "../services/equipoService";
-import { PlusCircle, Search, Filter, Trash2, Edit3, RefreshCw } from "lucide-react";
+import { 
+  PlusCircle, 
+  Search, 
+  Trash2, 
+  Edit3, 
+  RefreshCw, 
+  Laptop, 
+  X, 
+  Tag, 
+  AlertCircle,
+  RotateCcw
+} from "lucide-react";
 
 export default function EquiposList() {
   const [equipos, setEquipos] = useState([]);
@@ -39,7 +49,7 @@ export default function EquiposList() {
       setEquipos(data);
     } catch (err) {
       console.error(err);
-      setError("Error al cargar la lista de equipos tecnológicos.");
+      setError("Error de comunicación al consultar el inventario de equipos tecnológicos.");
     } finally {
       setIsLoading(false);
     }
@@ -52,6 +62,24 @@ export default function EquiposList() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     fetchEquipos();
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    getEquipos({
+      estado: estadoFilter,
+      categoria: categoriaFilter,
+      busqueda: "",
+    }).then(setEquipos).catch(console.error);
+  };
+
+  const handleResetFilters = () => {
+    setEstadoFilter("Todos");
+    setCategoriaFilter("Todas");
+    setSearchTerm("");
+    getEquipos({ estado: "Todos", categoria: "Todas", busqueda: "" })
+      .then(setEquipos)
+      .catch(console.error);
   };
 
   const openStatusModal = (equipo) => {
@@ -70,20 +98,26 @@ export default function EquiposList() {
       setMessage("");
       await updateEstadoEquipo(selectedEquipo.id, nuevoEstado);
       setMessageType("success");
-      setMessage(`Estado del equipo ${selectedEquipo.codigoPatrimonial} actualizado a '${nuevoEstado}'.`);
+      setMessage(`Estado del activo [${selectedEquipo.codigoPatrimonial}] actualizado exitosamente a '${nuevoEstado}'.`);
       setIsModalOpen(false);
       fetchEquipos();
     } catch (err) {
       setMessageType("error");
-      setMessage(err.message || "Error al actualizar estado del equipo.");
+      setMessage(err.message || "Error al actualizar el estado del equipo.");
     } finally {
       setIsUpdating(false);
     }
   };
 
-  const handleDelete = async (id, codigo) => {
-    if (!window.confirm(`¿Está seguro de eliminar el equipo ${codigo}? Esta acción fallará si tiene historial de préstamos (RN-06).`)) {
-      return;
+  const handleDelete = async (id, codigo, totalPrestamos) => {
+    if (totalPrestamos > 0) {
+      if (!window.confirm(`El equipo ${codigo} tiene ${totalPrestamos} préstamo(s) registrado(s). Según la regla RN-06 no podrá ser eliminado si tiene histórico de préstamos. ¿Desea intentar la eliminación?`)) {
+        return;
+      }
+    } else {
+      if (!window.confirm(`¿Confirmar eliminación definitiva del equipo ${codigo}? Esta acción no se puede deshacer.`)) {
+        return;
+      }
     }
 
     try {
@@ -94,7 +128,7 @@ export default function EquiposList() {
       fetchEquipos();
     } catch (err) {
       setMessageType("error");
-      setMessage(err.message);
+      setMessage(err.message || "No se pudo eliminar el equipo.");
     }
   };
 
@@ -117,170 +151,319 @@ export default function EquiposList() {
     { value: "Baja", label: "Baja" },
   ];
 
+  const activeFiltersCount = 
+    (estadoFilter !== "Todos" ? 1 : 0) + 
+    (categoriaFilter !== "Todas" ? 1 : 0) + 
+    (searchTerm.trim() ? 1 : 0);
+
   return (
-    <PageContainer
-      title="Inventario de Equipos Tecnológicos (RF-07)"
-      subtitle="Consulta, filtrado y actualización de activos de la empresa Innovatech Solutions"
-      actions={
+    <div className="space-y-6">
+      {/* Executive Header Banner */}
+      <div className="bg-white p-6 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+              Inventario de Equipos Tecnológicos
+            </h1>
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80">
+              RF-07
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Consulta, filtrado multidimensional y actualización operativa del parque de activos TI
+          </p>
+        </div>
+
         <Link to="/equipos/nuevo">
           <Button variant="primary">
             <PlusCircle className="w-4 h-4" />
-            Registrar Equipo
+            <span>Registrar Nuevo Equipo</span>
           </Button>
         </Link>
-      }
-    >
+      </div>
+
       <FormMessage type={messageType} message={message} />
 
-      {/* Filter and Search Bar */}
-      <div className="bg-gray-50/70 p-4 rounded-lg border border-gray-200 mb-6 flex flex-col md:flex-row gap-4 items-end">
-        <form onSubmit={handleSearchSubmit} className="flex-1 flex gap-2 w-full">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar por código, nombre o marca..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-500 bg-white"
-            />
-          </div>
-          <Button type="submit" variant="secondary">
-            Buscar
-          </Button>
-        </form>
+      {/* High-Fidelity Search & Filter Bar */}
+      <div className="bg-white p-4 lg:p-5 rounded-2xl shadow-xs border border-slate-200/80 space-y-3">
+        <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
+          {/* Search Input with Clear Button */}
+          <form onSubmit={handleSearchSubmit} className="flex-1 flex gap-2">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Buscar por código patrimonial, nombre o marca..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-9 py-2 text-xs border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50/50 hover:bg-white text-slate-800 transition"
+                aria-label="Buscar equipo"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={handleClearSearch}
+                  className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 transition"
+                  title="Limpiar búsqueda"
+                  aria-label="Limpiar campo de búsqueda"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+            <Button type="submit" variant="secondary" className="!py-2 !text-xs shrink-0">
+              Buscar
+            </Button>
+          </form>
 
-        <div className="flex gap-3 w-full md:w-auto">
-          <div className="w-44">
-            <label className="block text-xs font-semibold text-gray-500 mb-1">Categoría</label>
-            <select
-              value={categoriaFilter}
-              onChange={(e) => setCategoriaFilter(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white outline-none focus:ring-2 focus:ring-blue-200"
-            >
-              {categorias.map((c) => (
-                <option key={c.value} value={c.value}>{c.label}</option>
-              ))}
-            </select>
+          {/* Category & Status Selects */}
+          <div className="flex flex-wrap sm:flex-nowrap gap-2.5 items-center">
+            {/* Category */}
+            <div className="w-full sm:w-48">
+              <select
+                value={categoriaFilter}
+                onChange={(e) => setCategoriaFilter(e.target.value)}
+                aria-label="Filtrar por categoría"
+                className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50/50 hover:bg-white text-slate-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition font-medium cursor-pointer"
+              >
+                {categorias.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Status */}
+            <div className="w-full sm:w-40">
+              <select
+                value={estadoFilter}
+                onChange={(e) => setEstadoFilter(e.target.value)}
+                aria-label="Filtrar por estado operativo"
+                className="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50/50 hover:bg-white text-slate-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition font-medium cursor-pointer"
+              >
+                {estados.map((s) => (
+                  <option key={s.value} value={s.value}>{s.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter Stats & Reset Indicator */}
+        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <span>Resultados: <strong className="text-slate-800">{equipos.length}</strong> activos</span>
+            {activeFiltersCount > 0 && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/80">
+                {activeFiltersCount} {activeFiltersCount === 1 ? "filtro activo" : "filtros activos"}
+              </span>
+            )}
           </div>
 
-          <div className="w-40">
-            <label className="block text-xs font-semibold text-gray-500 mb-1">Estado (RF-14)</label>
-            <select
-              value={estadoFilter}
-              onChange={(e) => setEstadoFilter(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white outline-none focus:ring-2 focus:ring-blue-200"
+          {activeFiltersCount > 0 && (
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="text-xs font-semibold text-blue-600 hover:text-blue-700 inline-flex items-center gap-1 transition"
             >
-              {estados.map((s) => (
-                <option key={s.value} value={s.value}>{s.label}</option>
-              ))}
-            </select>
-          </div>
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Restablecer filtros</span>
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Table */}
-      {isLoading ? (
-        <div className="p-12 text-center text-gray-500">
-          <RefreshCw className="w-6 h-6 animate-spin mx-auto text-blue-600 mb-2" />
-          <p className="text-sm font-medium">Consultando inventario de activos...</p>
-        </div>
-      ) : error ? (
-        <p className="p-4 bg-red-50 text-red-700 rounded-lg text-sm">{error}</p>
-      ) : equipos.length === 0 ? (
-        <div className="p-12 text-center text-gray-400">
-          <p className="text-base font-semibold">No se encontraron equipos con los criterios especificados.</p>
-          <p className="text-xs mt-1">Pruebe ajustando los filtros de búsqueda o registre un nuevo activo.</p>
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-gray-100/70 text-gray-700 uppercase text-[11px] font-semibold border-b border-gray-200">
-              <tr>
-                <th className="px-4 py-3">Código</th>
-                <th className="px-4 py-3">Equipo</th>
-                <th className="px-4 py-3">Categoría</th>
-                <th className="px-4 py-3">Marca</th>
-                <th className="px-4 py-3">Estado</th>
-                <th className="px-4 py-3">Préstamos</th>
-                <th className="px-4 py-3 text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 text-gray-700">
-              {equipos.map((e) => (
-                <tr key={e.id} className="hover:bg-blue-50/30 transition">
-                  <td className="px-4 py-3 font-mono font-bold text-blue-700 text-xs">
-                    {e.codigoPatrimonial}
-                  </td>
-                  <td className="px-4 py-3 font-medium text-gray-900">{e.nombre}</td>
-                  <td className="px-4 py-3 text-xs text-gray-600">{e.categoria}</td>
-                  <td className="px-4 py-3 text-xs text-gray-600">{e.marca}</td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={e.estado} />
-                  </td>
-                  <td className="px-4 py-3 text-xs text-gray-500 font-mono">
-                    {e.totalPrestamos} registros
-                  </td>
-                  <td className="px-4 py-3 text-right space-x-2">
-                    <button
-                      onClick={() => openStatusModal(e)}
-                      className="px-2.5 py-1 text-xs font-semibold rounded bg-gray-100 hover:bg-gray-200 text-gray-700 inline-flex items-center gap-1 transition"
-                      title="Actualizar estado del equipo (RF-08)"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      Estado
-                    </button>
-                    <button
-                      onClick={() => handleDelete(e.id, e.codigoPatrimonial)}
-                      className="px-2.5 py-1 text-xs font-semibold rounded bg-red-50 hover:bg-red-100 text-red-600 inline-flex items-center gap-1 transition"
-                      title="Eliminar equipo (RN-06)"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Eliminar
-                    </button>
-                  </td>
+      {/* Main Table Content or States */}
+      <div className="bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden">
+        {isLoading ? (
+          <div className="p-16 text-center text-slate-500 space-y-3">
+            <RefreshCw className="w-7 h-7 animate-spin mx-auto text-blue-600" />
+            <p className="text-xs font-semibold">Consultando catálogo de activos en PostgreSQL...</p>
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center text-red-600 bg-red-50 space-y-2">
+            <AlertCircle className="w-8 h-8 mx-auto text-red-500" />
+            <p className="text-sm font-semibold">{error}</p>
+            <Button onClick={fetchEquipos} variant="outline" className="!text-xs">
+              Reintentar
+            </Button>
+          </div>
+        ) : equipos.length === 0 ? (
+          /* High-Quality Illustrated Empty State */
+          <div className="p-16 text-center space-y-4 max-w-md mx-auto">
+            <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center border border-slate-200 shadow-inner">
+              <Laptop className="w-8 h-8" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-900">
+                No se encontraron equipos
+              </h3>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                No hay activos tecnológicos que coincidan con los criterios de búsqueda o filtros seleccionados.
+              </p>
+            </div>
+            <div className="flex justify-center gap-2 pt-2">
+              {activeFiltersCount > 0 ? (
+                <Button onClick={handleResetFilters} variant="secondary" className="!text-xs">
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Limpiar Filtros
+                </Button>
+              ) : (
+                <Link to="/equipos/nuevo">
+                  <Button variant="primary" className="!text-xs">
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    Registrar Primer Equipo
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs" aria-label="Tabla de inventario de equipos">
+              <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
+                <tr>
+                  <th scope="col" className="px-5 py-3.5">Código Patrimonial</th>
+                  <th scope="col" className="px-5 py-3.5">Nombre y Modelo</th>
+                  <th scope="col" className="px-5 py-3.5">Categoría</th>
+                  <th scope="col" className="px-5 py-3.5">Marca</th>
+                  <th scope="col" className="px-5 py-3.5">Estado Operativo</th>
+                  <th scope="col" className="px-5 py-3.5 text-center">Historial</th>
+                  <th scope="col" className="px-5 py-3.5 text-right">Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {equipos.map((e) => (
+                  <tr key={e.id} className="hover:bg-slate-50/70 transition-colors">
+                    {/* Monospace Pastille Badge for Code */}
+                    <td className="px-5 py-3.5 whitespace-nowrap">
+                      <span className="font-mono font-bold text-[11px] px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
+                        {e.codigoPatrimonial}
+                      </span>
+                    </td>
+
+                    {/* Equipment Name */}
+                    <td className="px-5 py-3.5">
+                      <div className="font-bold text-slate-900">{e.nombre}</div>
+                    </td>
+
+                    {/* Category */}
+                    <td className="px-5 py-3.5">
+                      <span className="inline-flex items-center gap-1 text-slate-600">
+                        <Tag className="w-3 h-3 text-slate-400" />
+                        {e.categoria}
+                      </span>
+                    </td>
+
+                    {/* Brand */}
+                    <td className="px-5 py-3.5 text-slate-600 font-medium">
+                      {e.marca}
+                    </td>
+
+                    {/* Semantic Status */}
+                    <td className="px-5 py-3.5 whitespace-nowrap">
+                      <StatusBadge status={e.estado} />
+                    </td>
+
+                    {/* Total loans */}
+                    <td className="px-5 py-3.5 text-center whitespace-nowrap">
+                      <span className="font-mono text-slate-600 font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-[11px]">
+                        {e.totalPrestamos} {e.totalPrestamos === 1 ? "préstamo" : "préstamos"}
+                      </span>
+                    </td>
+
+                    {/* Actions with Norman Signifiers */}
+                    <td className="px-5 py-3.5 text-right whitespace-nowrap space-x-1.5">
+                      <button
+                        type="button"
+                        onClick={() => openStatusModal(e)}
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        title="Actualizar estado operativo del equipo (RF-08)"
+                        aria-label={`Actualizar estado del equipo ${e.codigoPatrimonial}`}
+                      >
+                        <Edit3 className="w-3 h-3" />
+                        <span>Estado</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(e.id, e.codigoPatrimonial, e.totalPrestamos)}
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                        title={
+                          e.totalPrestamos > 0
+                            ? "Equipo con historial: protegido por RN-06"
+                            : "Eliminar equipo del catálogo"
+                        }
+                        aria-label={`Eliminar equipo ${e.codigoPatrimonial}`}
+                      >
+                        <Trash2 className="w-3 h-3 text-red-500" />
+                        <span>Eliminar</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
 
       {/* Modal for RF-08: Actualizar estado de equipo */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={`Actualizar Estado del Equipo: ${selectedEquipo?.codigoPatrimonial}`}
+        title={`Actualizar Estado Operativo &bull; ${selectedEquipo?.codigoPatrimonial}`}
       >
         <form onSubmit={handleSaveStatus} className="space-y-4">
-          <p className="text-xs text-gray-500">
-            Modifique el estado operativo de <strong>{selectedEquipo?.nombre}</strong>. Si el equipo se encuentra en Mantenimiento o Baja no podrá ser prestado (RN-02, RN-03).
-          </p>
+          <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-600">Equipo:</span>
+              <strong className="text-slate-900">{selectedEquipo?.nombre}</strong>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-600">Categoría & Marca:</span>
+              <span className="text-slate-700">{selectedEquipo?.categoria} &bull; {selectedEquipo?.marca}</span>
+            </div>
+            <div className="flex items-center justify-between pt-1 border-t border-slate-200">
+              <span className="font-semibold text-slate-600">Estado Actual:</span>
+              <StatusBadge status={selectedEquipo?.estado} />
+            </div>
+          </div>
+
+          <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-800 space-y-1">
+            <p className="font-semibold flex items-center gap-1">
+              <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+              Reglas de Negocio Institucionales:
+            </p>
+            <p className="text-[11px] leading-relaxed">
+              &bull; <strong>RN-02:</strong> Los equipos en <em>Mantenimiento</em> quedan excluidos de nuevos préstamos.<br />
+              &bull; <strong>RN-03:</strong> Los equipos dados de <em>Baja</em> quedan fuera del flujo operativo.
+            </p>
+          </div>
 
           <SelectField
-            label="Nuevo Estado"
+            label="Nuevo Estado Operativo (RF-08)"
             name="estado"
             value={nuevoEstado}
             onChange={(e) => setNuevoEstado(e.target.value)}
             options={[
-              { value: "Disponible", label: "Disponible (Listo para préstamo)" },
+              { value: "Disponible", label: "Disponible (Listo para asignación)" },
               { value: "Prestado", label: "Prestado (En custodia de colaborador)" },
-              { value: "Mantenimiento", label: "Mantenimiento (En soporte técnico - RN-02)" },
-              { value: "Baja", label: "Baja (Fuera de inventario operativo - RN-03)" },
+              { value: "Mantenimiento", label: "Mantenimiento (En taller de soporte técnico)" },
+              { value: "Baja", label: "Baja (Fuera de servicio definitivo)" },
             ]}
             required
           />
 
-          <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
             <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
               Cancelar
             </Button>
             <Button type="submit" variant="primary" disabled={isUpdating}>
-              {isUpdating ? "Guardando..." : "Actualizar Estado"}
+              {isUpdating ? "Guardando en DB..." : "Guardar Nuevo Estado"}
             </Button>
           </div>
         </form>
       </Modal>
-    </PageContainer>
+    </div>
   );
 }

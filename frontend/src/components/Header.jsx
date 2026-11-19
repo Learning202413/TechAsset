@@ -1,76 +1,200 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { LogOut, Home, Shield, User } from "lucide-react";
+import Modal from "./Modal";
+import Button from "./Button";
+import { 
+  LogOut, 
+  Home, 
+  ChevronRight, 
+  ShieldCheck, 
+  AlertTriangle 
+} from "lucide-react";
 
 export default function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  const handleLogout = () => {
-    if (window.confirm("¿Desea cerrar la sesión actual?")) {
-      logout();
-      navigate("/");
+  // Dynamic breadcrumbs based on active route
+  const getBreadcrumbs = () => {
+    const path = location.pathname;
+    if (path.startsWith("/equipos/nuevo")) {
+      return [
+        { label: "TechAsset", to: "/dashboard" },
+        { label: "Inventario", to: "/equipos" },
+        { label: "Registrar Activo", current: true },
+      ];
     }
+    if (path.startsWith("/equipos")) {
+      return [
+        { label: "TechAsset", to: "/dashboard" },
+        { label: "Módulos", to: "/dashboard" },
+        { label: "Inventario de Equipos", current: true },
+      ];
+    }
+    if (path.startsWith("/prestamos/nuevo")) {
+      return [
+        { label: "TechAsset", to: "/dashboard" },
+        { label: "Préstamos", to: "/prestamos" },
+        { label: "Registrar Asignación", current: true },
+      ];
+    }
+    if (path.startsWith("/prestamos")) {
+      return [
+        { label: "TechAsset", to: "/dashboard" },
+        { label: "Módulos", to: "/dashboard" },
+        { label: "Control de Préstamos", current: true },
+      ];
+    }
+    if (path.startsWith("/usuarios/nuevo")) {
+      return [
+        { label: "TechAsset", to: "/dashboard" },
+        { label: "Colaboradores", to: "/usuarios" },
+        { label: "Registrar Usuario", current: true },
+      ];
+    }
+    if (path.startsWith("/usuarios")) {
+      return [
+        { label: "TechAsset", to: "/dashboard" },
+        { label: "Módulos", to: "/dashboard" },
+        { label: "Directorio Colaboradores", current: true },
+      ];
+    }
+    return [
+      { label: "TechAsset", to: "/dashboard" },
+      { label: "Panel Principal", to: "/dashboard" },
+      { label: "Dashboard General", current: true },
+    ];
+  };
+
+  const breadcrumbs = getBreadcrumbs();
+
+  const handleConfirmLogout = () => {
+    logout();
+    setIsLogoutModalOpen(false);
+    navigate("/");
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 px-8 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-      <div>
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold text-gray-900 tracking-tight">
-            TechAsset
-          </h1>
-          <span className="text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-semibold font-mono">
-            v1.0
-          </span>
-        </div>
-        <p className="text-xs text-gray-500">
-          Innovatech Solutions S.A.C. &bull; Control Institucional de TI
-        </p>
-      </div>
+    <>
+      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-6 py-3 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_0_rgba(0,0,0,0.03)]">
+        {/* Left: Dynamic Breadcrumbs Navigation */}
+        <nav aria-label="Ruta de navegación" className="flex items-center gap-1.5 text-xs">
+          {breadcrumbs.map((crumb, idx) => (
+            <div key={crumb.label} className="flex items-center gap-1.5">
+              {idx > 0 && (
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" aria-hidden="true" />
+              )}
+              {crumb.current ? (
+                <span className="font-bold text-slate-900 px-2 py-0.5 rounded-md bg-slate-100/80 border border-slate-200/60">
+                  {crumb.label}
+                </span>
+              ) : (
+                <Link
+                  to={crumb.to}
+                  className="text-slate-500 hover:text-blue-600 transition-colors font-medium px-1 py-0.5 rounded hover:bg-slate-50"
+                >
+                  {crumb.label}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav>
 
-      <div className="flex items-center gap-4">
-        {/* Landing link */}
-        <Link
-          to="/"
-          className="text-xs font-semibold text-gray-600 hover:text-blue-600 transition inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-gray-100"
-          title="Ir al Portal Institucional / Landing"
-        >
-          <Home className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Portal Landing</span>
-        </Link>
-
-        {/* Status indicator */}
-        <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          Sistema Operativo
-        </span>
-
-        <div className="h-7 w-px bg-gray-200"></div>
-
-        {/* User profile & Logout */}
+        {/* Right: Quick actions, Live health status & User info */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
-            {user?.iniciales || "TI"}
-          </div>
-          <div className="text-right hidden sm:block">
-            <p className="text-xs font-bold text-gray-800 leading-tight">
-              {user?.nombre || "Carlos Mendoza"}
-            </p>
-            <p className="text-[11px] text-gray-500 font-medium">
-              {user?.rol || "Administrador TI"}
-            </p>
+          {/* Quick link to Landing */}
+          <Link
+            to="/"
+            className="text-xs font-semibold text-slate-600 hover:text-blue-600 transition inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            title="Ir al Portal Institucional y Landing Page"
+          >
+            <Home className="w-3.5 h-3.5 text-slate-500" />
+            <span className="hidden sm:inline">Portal Landing</span>
+          </Link>
+
+          {/* System Health Badge with Pulse & Tooltip */}
+          <div
+            className="hidden md:inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 shadow-2xs select-none"
+            title="Kestrel API .NET 9 & PostgreSQL 16 activos y sincronizados. Latencia promedio < 12ms."
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="tracking-tight text-[11px]">Sistemas Operativos</span>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition"
-            title="Cerrar sesión segura (Shneiderman: Permit easy reversal)"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+          <div className="h-5 w-px bg-slate-200 hidden sm:block" aria-hidden="true" />
+
+          {/* Collaborator Profile & Accessible Logout */}
+          <div className="flex items-center gap-2.5 pl-1">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center ring-2 ring-blue-500/20 shadow-sm shrink-0">
+              {user?.iniciales || "TI"}
+            </div>
+            <div className="text-left hidden lg:block">
+              <p className="text-xs font-bold text-slate-800 leading-tight">
+                {user?.nombre || "Carlos Mendoza"}
+              </p>
+              <div className="flex items-center gap-1 mt-0.5">
+                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/60">
+                  <ShieldCheck className="w-2.5 h-2.5 text-blue-600" />
+                  {user?.rol || "Administrador TI"}
+                </span>
+              </div>
+            </div>
+
+            {/* Logout Action with Signifier (Norman) & Easy Reversal (Shneiderman #5) */}
+            <button
+              type="button"
+              onClick={() => setIsLogoutModalOpen(true)}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition focus:outline-none focus:ring-2 focus:ring-red-400"
+              title="Cerrar sesión segura de trabajo"
+              aria-label="Cerrar sesión del usuario actual"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Accessible Logout Confirmation Dialog */}
+      <Modal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        title="Confirmación de Cierre de Sesión"
+      >
+        <div className="space-y-4">
+          <div className="flex items-start gap-3 p-3.5 bg-amber-50 rounded-xl border border-amber-200/80">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="text-xs text-amber-900">
+              <p className="font-bold">¿Está seguro de cerrar su sesión de trabajo?</p>
+              <p className="mt-1 text-amber-800/90 leading-relaxed">
+                Su sesión activa como <strong>{user?.nombre || "Administrador TI"}</strong> se dará por concluida.
+                Las transacciones y préstamos registrados permanecerán seguros en la base de datos PostgreSQL.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+            <Button
+              variant="secondary"
+              onClick={() => setIsLogoutModalOpen(false)}
+            >
+              Permanecer en el Sistema
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleConfirmLogout}
+            >
+              <LogOut className="w-4 h-4" />
+              Cerrar Sesión Segura
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }

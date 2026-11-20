@@ -270,25 +270,33 @@ export default function PrestamosList() {
         ) : (
           <>
             <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs min-w-[850px]" aria-label="Tabla de préstamos de equipos">
+            <table className="w-full table-fixed text-left text-xs" aria-label="Tabla de préstamos de equipos">
+              <colgroup>
+                <col className="w-[24%]" />
+                <col className="w-[25%]" />
+                <col className="w-[11%]" />
+                <col className="w-[11%]" />
+                <col className="w-[12%]" />
+                <col className="w-[8%]" />
+                <col className="w-[9%]" />
+              </colgroup>
               <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                 <tr>
-                  <th scope="col" className="px-4 py-3.5 min-w-[190px]">Equipo Asignado</th>
-                  <th scope="col" className="px-4 py-3.5 min-w-[180px]">Colaborador (Responsable)</th>
-                  <th scope="col" className="px-4 py-3.5 min-w-[110px]">Área</th>
-                  <th scope="col" className="px-4 py-3.5 whitespace-nowrap">Fecha Salida</th>
-                  <th scope="col" className="px-4 py-3.5 whitespace-nowrap">Fecha Devolución</th>
-                  <th scope="col" className="px-4 py-3.5 min-w-[150px] max-w-[200px]">Observaciones</th>
-                  <th scope="col" className="px-4 py-3.5 whitespace-nowrap">Estado</th>
-                  <th scope="col" className="px-4 py-3.5 text-right whitespace-nowrap">Acción</th>
+                  <th scope="col" className="px-2.5 py-3">Equipo Asignado</th>
+                  <th scope="col" className="px-2.5 py-3">Colaborador / Área</th>
+                  <th scope="col" className="px-2 py-3 whitespace-nowrap">Fecha Salida</th>
+                  <th scope="col" className="px-2 py-3 whitespace-nowrap">Fecha Devolución</th>
+                  <th scope="col" className="px-2.5 py-3">Observaciones</th>
+                  <th scope="col" className="px-2 py-3 text-center whitespace-nowrap">Estado</th>
+                  <th scope="col" className="px-2 py-3 text-right whitespace-nowrap">Acción</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {paginatedPrestamos.map((p) => (
                   <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
                     {/* Equipment with code pastille */}
-                    <td className="px-4 py-3.5 min-w-[190px]">
-                      <div className="font-bold text-slate-900 leading-snug">{p.equipoNombre}</div>
+                    <td className="px-2.5 py-3 align-middle">
+                      <div className="font-bold text-slate-900 leading-snug line-clamp-2">{p.equipoNombre}</div>
                       <div className="mt-1">
                         <span className="inline-block whitespace-nowrap font-mono font-bold text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
                           {p.equipoCodigoPatrimonial}
@@ -296,91 +304,89 @@ export default function PrestamosList() {
                       </div>
                     </td>
 
-                    {/* Collaborator with Avatar & details */}
-                    <td className="px-4 py-3.5 min-w-[180px]">
-                      <div className="flex items-center gap-2.5">
+                    {/* Collaborator & Department unified for optimal scanning and zero overflow */}
+                    <td className="px-2.5 py-3 align-middle">
+                      <div className="flex items-center gap-2 min-w-0">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
                           {p.usuarioNombreCompleto
                             ? p.usuarioNombreCompleto.substring(0, 2).toUpperCase()
                             : "CO"}
                         </div>
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex-1">
                           <p className="font-semibold text-slate-800 leading-tight truncate">
                             {p.usuarioNombreCompleto}
                           </p>
-                          <p className="text-[10px] text-slate-400 mt-0.5 font-mono truncate">
-                            {p.usuarioCorreo}
-                          </p>
+                          <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200/60 whitespace-nowrap shrink-0">
+                              {p.usuarioArea}
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-mono truncate" title={p.usuarioCorreo}>
+                              {p.usuarioCorreo}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </td>
 
-                    {/* Department */}
-                    <td className="px-4 py-3.5 min-w-[110px] whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700">
-                        {p.usuarioArea}
-                      </span>
-                    </td>
-
                     {/* Loan Date (Compact Stacked) */}
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-1.5 text-slate-700 text-xs font-medium">
-                        <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <td className="px-2 py-3 whitespace-nowrap align-middle">
+                      <div className="flex items-center gap-1 text-slate-700 text-xs font-medium">
+                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
                         <span>{new Date(p.fechaPrestamo).toLocaleDateString()}</span>
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono pl-5">
+                      <div className="text-[10px] text-slate-400 font-mono pl-4">
                         {new Date(p.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </td>
 
                     {/* Return Date (Compact Stacked) */}
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="px-2 py-3 whitespace-nowrap align-middle">
                       {p.fechaDevolucion ? (
                         <div>
-                          <div className="flex items-center gap-1.5 text-slate-700 text-xs font-medium">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <div className="flex items-center gap-1 text-slate-700 text-xs font-medium">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
                             <span>{new Date(p.fechaDevolucion).toLocaleDateString()}</span>
                           </div>
-                          <div className="text-[10px] text-slate-400 font-mono pl-5">
+                          <div className="text-[10px] text-slate-400 font-mono pl-4">
                             {new Date(p.fechaDevolucion).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </div>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/80">
-                          <Clock className="w-3 h-3 text-amber-500" />
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/80">
+                          <Clock className="w-2.5 h-2.5 text-amber-500" />
                           En custodia
                         </span>
                       )}
                     </td>
 
                     {/* Observations */}
-                    <td className="px-4 py-3.5 min-w-[150px] max-w-[200px]" title={p.observacion}>
+                    <td className="px-2.5 py-3 align-middle" title={p.observacion || "Sin observaciones iniciales"}>
                       <p className="text-slate-600 text-xs truncate">
                         {p.observacion || "Sin observaciones iniciales"}
                       </p>
                     </td>
 
                     {/* Status Badge */}
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="px-2 py-3 text-center whitespace-nowrap align-middle">
                       <StatusBadge status={p.esActivo ? "Prestado" : "Finalizado"} />
                     </td>
 
                     {/* Action with clear Norman Signifier */}
-                    <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                    <td className="px-2 py-3 text-right whitespace-nowrap align-middle">
                       {p.esActivo ? (
                         <Button
                           onClick={() => openDevolucionModal(p)}
                           variant="success"
-                          className="!text-xs !py-1.5 !px-3 shadow-xs"
+                          className="!text-xs !py-1 !px-2.5 shadow-xs"
                           title="Registrar devolución de equipo"
                           aria-label={`Registrar devolución de ${p.equipoNombre}`}
                         >
                           <FileCheck2 className="w-3.5 h-3.5" />
-                          <span>Registrar Devolución</span>
+                          <span>Devolver</span>
                         </Button>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 px-2 py-1">
-                          <CheckCircle className="w-3.5 h-3.5 text-slate-400" />
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 px-1 py-0.5">
+                          <CheckCircle className="w-3 h-3 text-slate-400" />
                           Devuelto
                         </span>
                       )}

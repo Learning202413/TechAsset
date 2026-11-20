@@ -341,32 +341,32 @@ export default function EquiposList() {
               <table className="w-full text-left text-xs" aria-label="Tabla de inventario de equipos">
                 <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                   <tr>
-                    <th scope="col" className="px-5 py-3.5">Código Patrimonial</th>
-                    <th scope="col" className="px-5 py-3.5">Nombre y Modelo</th>
-                    <th scope="col" className="px-5 py-3.5">Categoría</th>
-                    <th scope="col" className="px-5 py-3.5">Marca</th>
-                    <th scope="col" className="px-5 py-3.5">Estado Operativo</th>
-                    <th scope="col" className="px-5 py-3.5 text-center">Historial</th>
-                    <th scope="col" className="px-5 py-3.5 text-right">Acciones</th>
+                    <th scope="col" className="px-3.5 py-3">Código Patrimonial</th>
+                    <th scope="col" className="px-3.5 py-3">Nombre y Modelo</th>
+                    <th scope="col" className="px-3.5 py-3">Categoría</th>
+                    <th scope="col" className="px-3.5 py-3">Marca</th>
+                    <th scope="col" className="px-3.5 py-3">Estado Operativo</th>
+                    <th scope="col" className="px-3.5 py-3 text-center">Historial</th>
+                    <th scope="col" className="px-3.5 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedEquipos.map((e) => (
                   <tr key={e.id} className="hover:bg-slate-50/70 transition-colors">
                     {/* Monospace Pastille Badge for Code */}
-                    <td className="px-5 py-3.5 whitespace-nowrap">
+                    <td className="px-3.5 py-3 whitespace-nowrap">
                       <span className="font-mono font-bold text-[11px] px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
                         {e.codigoPatrimonial}
                       </span>
                     </td>
 
                     {/* Equipment Name */}
-                    <td className="px-5 py-3.5">
+                    <td className="px-3.5 py-3">
                       <div className="font-bold text-slate-900">{e.nombre}</div>
                     </td>
 
                     {/* Category */}
-                    <td className="px-5 py-3.5">
+                    <td className="px-3.5 py-3">
                       <span className="inline-flex items-center gap-1 text-slate-600">
                         <Tag className="w-3 h-3 text-slate-400" />
                         {e.categoria}
@@ -374,24 +374,24 @@ export default function EquiposList() {
                     </td>
 
                     {/* Brand */}
-                    <td className="px-5 py-3.5 text-slate-600 font-medium">
+                    <td className="px-3.5 py-3 text-slate-600 font-medium">
                       {e.marca}
                     </td>
 
                     {/* Semantic Status */}
-                    <td className="px-5 py-3.5 whitespace-nowrap">
+                    <td className="px-3.5 py-3 whitespace-nowrap">
                       <StatusBadge status={e.estado} />
                     </td>
 
                     {/* Total loans */}
-                    <td className="px-5 py-3.5 text-center whitespace-nowrap">
+                    <td className="px-3.5 py-3 text-center whitespace-nowrap">
                       <span className="font-mono text-slate-600 font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-[11px]">
                         {e.totalPrestamos} {e.totalPrestamos === 1 ? "préstamo" : "préstamos"}
                       </span>
                     </td>
 
                     {/* Actions with Norman Signifiers */}
-                    <td className="px-5 py-3.5 text-right whitespace-nowrap space-x-1.5">
+                    <td className="px-3.5 py-3 text-right whitespace-nowrap space-x-1.5">
                       <button
                         type="button"
                         onClick={() => openStatusModal(e)}

@@ -159,14 +159,14 @@ export default function UsuariosList() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs min-w-[650px]" aria-label="Tabla de colaboradores">
+              <table className="w-full text-left text-xs" aria-label="Tabla de colaboradores">
                 <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                   <tr>
-                    <th scope="col" className="px-5 py-3.5">Colaborador</th>
-                    <th scope="col" className="px-5 py-3.5">Correo Institucional</th>
-                    <th scope="col" className="px-5 py-3.5">Área Funcional</th>
-                    <th scope="col" className="px-5 py-3.5">Estado</th>
-                    <th scope="col" className="px-5 py-3.5 text-right">Acción</th>
+                    <th scope="col" className="px-3.5 py-3">Colaborador</th>
+                    <th scope="col" className="px-3.5 py-3">Correo Institucional</th>
+                    <th scope="col" className="px-3.5 py-3">Área Funcional</th>
+                    <th scope="col" className="px-3.5 py-3">Estado</th>
+                    <th scope="col" className="px-3.5 py-3 text-right">Acción</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -174,7 +174,7 @@ export default function UsuariosList() {
                     const initials = `${u.nombres?.charAt(0) || ""}${u.apellidos?.charAt(0) || ""}`.toUpperCase() || "CO";
                     return (
                       <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="px-5 py-3.5 whitespace-nowrap">
+                        <td className="px-3.5 py-3 whitespace-nowrap">
                           <div className="flex items-center gap-2.5">
                             <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
                               {initials}
@@ -187,18 +187,18 @@ export default function UsuariosList() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-5 py-3.5 whitespace-nowrap">
+                        <td className="px-3.5 py-3 whitespace-nowrap">
                           <span className="text-xs text-blue-600 font-mono">{u.correo}</span>
                         </td>
-                        <td className="px-5 py-3.5 whitespace-nowrap">
+                        <td className="px-3.5 py-3 whitespace-nowrap">
                           <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60">
                             {u.area}
                           </span>
                         </td>
-                        <td className="px-5 py-3.5 whitespace-nowrap">
+                        <td className="px-3.5 py-3 whitespace-nowrap">
                           <StatusBadge activo={u.estado} />
                         </td>
-                        <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                        <td className="px-3.5 py-3 text-right whitespace-nowrap">
                           <button
                             type="button"
                             onClick={() => openToggleModal(u)}

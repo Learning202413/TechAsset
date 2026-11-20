@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import logoImg from "../assets/logo.jpg";
 import { 
   Layers, 
   LogIn, 
@@ -88,12 +89,14 @@ export default function Landing() {
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 h-18 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-600/20 group-hover:scale-105 transition-transform">
-              <Layers className="w-5 h-5" />
-            </div>
+            <img 
+              src={logoImg} 
+              alt="TechAsset Logo" 
+              className="w-10 h-10 object-contain rounded-xl shadow-xs group-hover:scale-105 transition-transform bg-white" 
+            />
             <div>
               <span className="text-xl font-black tracking-tight text-slate-900 block leading-tight">
-                TechAsset
+                Tech<span className="text-cyan-600">Asset</span>
               </span>
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
                 Innovatech Solutions S.A.C.
@@ -437,9 +440,19 @@ export default function Landing() {
       {/* 9. PIE DE PÁGINA */}
       <footer className="bg-white border-t border-slate-200 py-8 px-6 text-xs text-slate-500">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-semibold text-slate-700">
-            TechAsset &bull; Innovatech Solutions S.A.C.
-          </p>
+          <div className="flex items-center gap-3">
+            <img 
+              src={logoImg} 
+              alt="TechAsset Logo" 
+              className="w-8 h-8 object-contain rounded-lg shadow-2xs bg-white" 
+            />
+            <div>
+              <p className="font-bold text-slate-800 text-xs">
+                Tech<span className="text-cyan-600">Asset</span> &bull; Innovatech Solutions S.A.C.
+              </p>
+              <p className="text-slate-400 text-[10px]">Gestión Institucional de Inventario y Préstamos</p>
+            </div>
+          </div>
           <div className="flex gap-6 font-medium">
             <Link to="/login" className="hover:text-blue-600 transition">Login</Link>
             <Link to="/dashboard" className="hover:text-blue-600 transition">Dashboard</Link>

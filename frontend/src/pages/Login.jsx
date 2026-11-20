@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import logoImg from "../assets/logo.jpg";
 import { 
   Layers, 
   LogIn, 
@@ -139,12 +140,14 @@ export default function Login() {
         {/* Top Header in Left Pane */}
         <div className="relative z-10 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="p-2.5 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-500/30 group-hover:scale-105 transition">
-              <Layers className="w-6 h-6" />
-            </div>
+            <img 
+              src={logoImg} 
+              alt="TechAsset Logo" 
+              className="w-11 h-11 object-contain rounded-xl bg-white p-1 shadow-lg shadow-blue-500/20 group-hover:scale-105 transition" 
+            />
             <div>
               <span className="text-2xl font-black tracking-tight text-white flex items-center gap-1.5">
-                TechAsset <span className="text-[10px] uppercase font-bold text-blue-400 bg-blue-500/20 px-2 py-0.5 rounded border border-blue-500/30">Enterprise</span>
+                Tech<span className="text-cyan-400">Asset</span> <span className="text-[10px] uppercase font-bold text-blue-400 bg-blue-500/20 px-2 py-0.5 rounded border border-blue-500/30">Enterprise</span>
               </span>
               <span className="text-xs font-semibold text-slate-400 tracking-wider block">
                 INNOVATECH SOLUTIONS S.A.C.
@@ -243,8 +246,11 @@ export default function Login() {
         <div className="max-w-md w-full mx-auto my-auto">
           {/* Header */}
           <div className="mb-6">
+            <div className="w-12 h-12 rounded-xl bg-white p-1 border border-slate-200 shadow-xs mb-3 flex items-center justify-center">
+              <img src={logoImg} alt="TechAsset Logo" className="w-full h-full object-contain" />
+            </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Bienvenido a TechAsset
+              Bienvenido a Tech<span className="text-cyan-600">Asset</span>
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
               Ingresá tus credenciales autorizadas de Innovatech Solutions S.A.C. para acceder al panel de control patrimonial.

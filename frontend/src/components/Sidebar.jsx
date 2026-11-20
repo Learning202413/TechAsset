@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import logoImg from "../assets/logo.jpg";
 import { 
   LayoutDashboard, 
   Laptop, 
@@ -40,13 +41,15 @@ export default function Sidebar() {
       <div className="space-y-6">
         {/* Brand / Executive Header */}
         <div className="px-2 py-3 border-b border-slate-800/80 flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-xl text-white shadow-lg shadow-blue-500/25 ring-1 ring-white/20">
-            <Layers className="w-5 h-5" />
-          </div>
+          <img 
+            src={logoImg} 
+            alt="TechAsset Logo" 
+            className="w-9 h-9 object-contain rounded-xl bg-white p-0.5 shadow-md shadow-blue-500/20" 
+          />
           <div>
             <div className="flex items-center gap-1.5">
               <h2 className="text-base font-extrabold tracking-tight text-white leading-none">
-                TechAsset
+                Tech<span className="text-cyan-400">Asset</span>
               </h2>
               <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
                 PRO

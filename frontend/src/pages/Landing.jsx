@@ -34,29 +34,29 @@ export default function Landing() {
       titulo: "Administrador",
       responsabilidad: "Responsable de administrar la información del sistema.",
       funciones: [
-        "Gestionar usuarios (RF-01 a RF-04)",
-        "Gestionar equipos (RF-05 a RF-08)",
-        "Consultar reportes (RF-13 a RF-17)",
-        "Supervisar préstamos (RN-09)"
+        "Gestionar usuarios y cuentas de acceso",
+        "Administrar el catálogo de equipos tecnológicos",
+        "Consultar reportes e indicadores de gestión",
+        "Supervisar préstamos y auditoría institucional"
       ]
     },
     tecnologia: {
       titulo: "Responsable de Tecnología",
       responsabilidad: "Responsable de la asignación y control de los equipos tecnológicos.",
       funciones: [
-        "Registrar equipos tecnológicos (RF-05)",
-        "Aprobar préstamos de equipos (RF-09)",
-        "Registrar devoluciones con observación (RF-10, RN-10)",
-        "Consultar inventario en tiempo real (RF-07)"
+        "Registrar e inventariar equipos tecnológicos",
+        "Aprobar y despachar préstamos de equipos",
+        "Registrar devoluciones con inspección física",
+        "Consultar la disponibilidad de inventario en tiempo real"
       ]
     },
     colaborador: {
       titulo: "Colaborador",
       responsabilidad: "Usuario que solicita equipos tecnológicos para sus actividades.",
       funciones: [
-        "Solicitar préstamos de equipos",
-        "Consultar historial de préstamos (RF-11)",
-        "Consultar disponibilidad de activos (RF-07)"
+        "Solicitar préstamos de equipos para sus actividades",
+        "Consultar su historial de préstamos",
+        "Consultar la disponibilidad de equipos tecnológicos"
       ]
     }
   };
@@ -126,7 +126,7 @@ export default function Landing() {
           <div className="max-w-4xl mx-auto px-6 text-center">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-6">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Caso Práctico Integrador &bull; Construcción de Software</span>
+              <span>Plataforma Institucional &bull; Gestión y Trazabilidad de TI</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl font-black text-slate-950 tracking-tight leading-[1.15]">
@@ -371,7 +371,7 @@ export default function Landing() {
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center max-w-2xl mx-auto mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                Dashboard Mínimo Requerido (Sección 10)
+                Panel de Indicadores Centrales
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
                 Indicadores Clave del Sistema
@@ -461,7 +461,7 @@ export default function Landing() {
             <a href="http://localhost:5153/swagger" target="_blank" rel="noreferrer" className="hover:text-blue-600 transition">Swagger API</a>
           </div>
           <p className="text-slate-400">
-            Caso Práctico Integrador &bull; Semanas 01–12
+            Control Institucional de TI &bull; Innovatech Solutions S.A.C.
           </p>
         </div>
       </footer>

@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import PageContainer from "../components/PageContainer";
 import StatusBadge from "../components/StatusBadge";
 import Button from "../components/Button";
+import Modal from "../components/Modal";
 import FormMessage from "../components/FormMessage";
 import { getUsuarios, toggleEstadoUsuario } from "../services/usuarioService";
-import { PlusCircle, Search, Users, UserCheck, UserX, RefreshCw } from "lucide-react";
+import { PlusCircle, Search, Users, UserCheck, UserX, RefreshCw, AlertCircle } from "lucide-react";
 
 export default function UsuariosList() {
   const [usuarios, setUsuarios] = useState([]);
@@ -33,21 +34,37 @@ export default function UsuariosList() {
     fetchUsuarios();
   }, []);
 
-  const handleToggleEstado = async (id, nombres, estadoActual) => {
-    const accion = estadoActual ? "deshabilitar" : "habilitar";
-    if (!window.confirm(`¿Está seguro de ${accion} al usuario ${nombres}? (RN-09)`)) {
-      return;
-    }
+  const [toggleModal, setToggleModal] = useState({
+    isOpen: false,
+    usuario: null,
+    isSubmitting: false,
+  });
+
+  const openToggleModal = (u) => {
+    setToggleModal({
+      isOpen: true,
+      usuario: u,
+      isSubmitting: false,
+    });
+  };
+
+  const handleConfirmToggle = async () => {
+    if (!toggleModal.usuario) return;
+    const { id, nombres, apellidos, estado } = toggleModal.usuario;
+    const nombreCompleto = `${nombres} ${apellidos}`;
 
     try {
+      setToggleModal((prev) => ({ ...prev, isSubmitting: true }));
       setMessage("");
-      await toggleEstadoUsuario(id, !estadoActual);
+      await toggleEstadoUsuario(id, !estado);
       setMessageType("success");
-      setMessage(`Usuario ${nombres} ${!estadoActual ? "habilitado" : "deshabilitado"} exitosamente.`);
+      setMessage(`Colaborador ${nombreCompleto} ${!estado ? "habilitado" : "deshabilitado"} exitosamente.`);
+      setToggleModal({ isOpen: false, usuario: null, isSubmitting: false });
       fetchUsuarios();
     } catch (err) {
       setMessageType("error");
       setMessage(err.message || "Error al modificar estado del colaborador.");
+      setToggleModal((prev) => ({ ...prev, isSubmitting: false }));
     }
   };
 
@@ -136,7 +153,7 @@ export default function UsuariosList() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button
-                      onClick={() => handleToggleEstado(u.id, `${u.nombres} ${u.apellidos}`, u.estado)}
+                      onClick={() => openToggleModal(u)}
                       className={`px-2.5 py-1 text-xs font-semibold rounded inline-flex items-center gap-1 transition ${
                         u.estado
                           ? "bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200"
@@ -163,6 +180,63 @@ export default function UsuariosList() {
           </table>
         </div>
       )}
+
+      {/* Modal accesible para alternar estado de colaborador (Reemplaza window.confirm) */}
+      <Modal
+        isOpen={toggleModal.isOpen}
+        onClose={() => !toggleModal.isSubmitting && setToggleModal({ isOpen: false, usuario: null, isSubmitting: false })}
+        title={toggleModal.usuario?.estado ? "Deshabilitar Colaborador (RN-09)" : "Habilitar Colaborador"}
+      >
+        <div className="space-y-4">
+          <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-600">Colaborador:</span>
+              <strong className="text-slate-900">
+                {toggleModal.usuario?.apellidos}, {toggleModal.usuario?.nombres}
+              </strong>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-600">Correo Institucional:</span>
+              <span className="font-mono text-blue-600">{toggleModal.usuario?.correo}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-600">Área Funcional:</span>
+              <span className="text-slate-700">{toggleModal.usuario?.area}</span>
+            </div>
+          </div>
+
+          <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-800 space-y-1">
+            <p className="font-bold flex items-center gap-1.5 text-amber-900">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+              Regla de Negocio RN-09:
+            </p>
+            <p className="text-[11px] leading-relaxed text-amber-800">
+              Solo el Administrador podrá deshabilitar usuarios. Al {toggleModal.usuario?.estado ? "deshabilitar" : "habilitar"} al colaborador, este {toggleModal.usuario?.estado ? "no podrá registrar nuevas solicitudes de préstamo" : "volverá a estar habilitado para asignaciones"}.
+            </p>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+            <Button
+              variant="secondary"
+              onClick={() => setToggleModal({ isOpen: false, usuario: null, isSubmitting: false })}
+              disabled={toggleModal.isSubmitting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant={toggleModal.usuario?.estado ? "danger" : "success"}
+              onClick={handleConfirmToggle}
+              disabled={toggleModal.isSubmitting}
+            >
+              {toggleModal.isSubmitting
+                ? "Procesando..."
+                : toggleModal.usuario?.estado
+                ? "Confirmar Deshabilitación"
+                : "Confirmar Habilitación"}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </PageContainer>
   );
 }

@@ -318,7 +318,10 @@ export default function Login() {
                 </label>
                 <button
                   type="button"
-                  onClick={() => alert("Para fines de evaluación académica, podés hacer clic en cualquiera de los 3 perfiles demo de abajo para cargar credenciales verificadas.")}
+                  onClick={() => {
+                    setMessage("Para fines de evaluación académica, podés hacer clic en cualquiera de los 3 perfiles demo de abajo para cargar credenciales verificadas.");
+                    setMessageType("info");
+                  }}
                   className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition hover:underline"
                 >
                   ¿Ayuda con la contraseña?

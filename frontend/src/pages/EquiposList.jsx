@@ -37,6 +37,13 @@ export default function EquiposList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
+  // Modal State for Confirming Deletion (Replaces browser default window.confirm)
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    equipo: null,
+    isDeleting: false,
+  });
+
   const fetchEquipos = async () => {
     try {
       setIsLoading(true);
@@ -109,26 +116,28 @@ export default function EquiposList() {
     }
   };
 
-  const handleDelete = async (id, codigo, totalPrestamos) => {
-    if (totalPrestamos > 0) {
-      if (!window.confirm(`El equipo ${codigo} tiene ${totalPrestamos} préstamo(s) registrado(s). Según la regla RN-06 no podrá ser eliminado si tiene histórico de préstamos. ¿Desea intentar la eliminación?`)) {
-        return;
-      }
-    } else {
-      if (!window.confirm(`¿Confirmar eliminación definitiva del equipo ${codigo}? Esta acción no se puede deshacer.`)) {
-        return;
-      }
-    }
+  const openDeleteModal = (equipo) => {
+    setDeleteModal({
+      isOpen: true,
+      equipo,
+      isDeleting: false,
+    });
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!deleteModal.equipo) return;
     try {
+      setDeleteModal((prev) => ({ ...prev, isDeleting: true }));
       setMessage("");
-      await deleteEquipo(id);
+      await deleteEquipo(deleteModal.equipo.id);
       setMessageType("success");
-      setMessage(`Equipo ${codigo} eliminado correctamente.`);
+      setMessage(`Activo patrimonial [${deleteModal.equipo.codigoPatrimonial}] eliminado correctamente.`);
+      setDeleteModal({ isOpen: false, equipo: null, isDeleting: false });
       fetchEquipos();
     } catch (err) {
       setMessageType("error");
       setMessage(err.message || "No se pudo eliminar el equipo.");
+      setDeleteModal((prev) => ({ ...prev, isDeleting: false }));
     }
   };
 
@@ -386,7 +395,7 @@ export default function EquiposList() {
 
                       <button
                         type="button"
-                        onClick={() => handleDelete(e.id, e.codigoPatrimonial, e.totalPrestamos)}
+                        onClick={() => openDeleteModal(e)}
                         className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-red-500/20"
                         title={
                           e.totalPrestamos > 0
@@ -463,6 +472,67 @@ export default function EquiposList() {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Modal para Confirmar Eliminación (Reemplaza window.confirm del navegador) */}
+      <Modal
+        isOpen={deleteModal.isOpen}
+        onClose={() => !deleteModal.isDeleting && setDeleteModal({ isOpen: false, equipo: null, isDeleting: false })}
+        title="Confirmar Eliminación de Activo"
+      >
+        <div className="space-y-4">
+          <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-600">Código Patrimonial:</span>
+              <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">
+                {deleteModal.equipo?.codigoPatrimonial}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-slate-600">Equipo:</span>
+              <strong className="text-slate-900">{deleteModal.equipo?.nombre}</strong>
+            </div>
+          </div>
+
+          {deleteModal.equipo?.totalPrestamos > 0 ? (
+            <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
+              <p className="font-bold flex items-center gap-1.5 text-amber-800">
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                Restricción Institucional RN-06:
+              </p>
+              <p className="text-[11px] leading-relaxed text-amber-800">
+                El equipo <strong>{deleteModal.equipo?.codigoPatrimonial}</strong> tiene <strong>{deleteModal.equipo?.totalPrestamos} préstamo(s)</strong> registrado(s). Según la regla <strong>RN-06</strong>, el sistema no permite eliminar equipos con histórico de préstamos para preservar la auditoría patrimonial. ¿Desea intentar la eliminación de todos modos?
+              </p>
+            </div>
+          ) : (
+            <div className="p-3.5 bg-red-50 rounded-xl border border-red-200 text-xs text-red-800 space-y-1">
+              <p className="font-bold flex items-center gap-1.5 text-red-700">
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                Advertencia de Acción Destructiva:
+              </p>
+              <p className="text-[11px] leading-relaxed text-red-700">
+                ¿Confirmar la eliminación definitiva del equipo <strong>{deleteModal.equipo?.codigoPatrimonial}</strong>? Esta acción no se puede deshacer.
+              </p>
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+            <Button
+              variant="secondary"
+              onClick={() => setDeleteModal({ isOpen: false, equipo: null, isDeleting: false })}
+              disabled={deleteModal.isDeleting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleConfirmDelete}
+              disabled={deleteModal.isDeleting}
+            >
+              {deleteModal.isDeleting ? "Eliminando..." : "Confirmar Eliminación"}
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

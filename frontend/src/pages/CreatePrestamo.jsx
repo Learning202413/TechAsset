@@ -36,7 +36,7 @@ export default function CreatePrestamo() {
         const uList = await getUsuarios();
         setUsuarios(uList.filter((u) => u.estado));
 
-        // Load available equipments (Disponible) - applying RN-02 and RN-03
+        // Load available equipments (Disponible)
         const eList = await getEquipos({ estado: "Disponible" });
         setEquipos(eList);
       } catch (err) {
@@ -60,7 +60,7 @@ export default function CreatePrestamo() {
     const newErrors = {};
 
     if (!formData.usuarioId) {
-      newErrors.usuarioId = "Debe seleccionar un colaborador responsable del préstamo (RN-05).";
+      newErrors.usuarioId = "Debe seleccionar un colaborador responsable del préstamo.";
     }
 
     if (!formData.equipoId) {
@@ -112,7 +112,7 @@ export default function CreatePrestamo() {
 
   return (
     <PageContainer
-      title="Registrar Nuevo Préstamo de Equipo (RF-09)"
+      title="Registrar Nuevo Préstamo de Equipo"
       subtitle="Asignación controlada de activos tecnológicos a colaboradores institucionales"
       actions={
         <Link to="/prestamos">
@@ -134,16 +134,16 @@ export default function CreatePrestamo() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="p-4 bg-blue-50/60 border border-blue-200 rounded-lg text-xs text-blue-900 space-y-1">
-              <p className="font-bold">Reglas de Negocio Aplicadas:</p>
+              <p className="font-bold">Condiciones de Asignación:</p>
               <ul className="list-disc pl-4 space-y-0.5">
-                <li>Solo se listan equipos con estado <strong>Disponible</strong> (RN-01, RN-02, RN-03).</li>
-                <li>Todo préstamo queda vinculado a un colaborador registrado (RN-05).</li>
-                <li>Al confirmar, el estado del equipo cambiará automáticamente a <strong>Prestado</strong>.</li>
+                <li>Solo se listan equipos con estado <strong>Disponible</strong> para entrega inmediata.</li>
+                <li>Todo préstamo queda formalmente vinculado al colaborador que recibe la custodia.</li>
+                <li>Al confirmar, el estado del activo cambiará automáticamente a <strong>Prestado</strong>.</li>
               </ul>
             </div>
 
             <SelectField
-              label="Colaborador Responsable (RN-05)"
+              label="Colaborador Responsable"
               name="usuarioId"
               value={formData.usuarioId}
               onChange={handleChange}

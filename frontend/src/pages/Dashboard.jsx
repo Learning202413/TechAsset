@@ -13,6 +13,7 @@ import {
   Building2, 
   TrendingUp, 
   PlusCircle,
+  Users,
   RefreshCw,
   Layers,
   Sparkles,
@@ -90,7 +91,7 @@ export default function Dashboard() {
         <div className="space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold bg-blue-500/20 text-blue-300 border border-blue-400/30">
             <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-            Monitoreo en Tiempo Real &bull; ISO 9241-110
+            Monitoreo en Tiempo Real &bull; Control de Activos TI
           </div>
           <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-white">
             Panel de Operaciones TI
@@ -100,25 +101,35 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Norman Affordances: Clear, prominent primary actions */}
-        <div className="flex flex-wrap items-center gap-3">
-          <Link to="/prestamos/nuevo">
-            <button
-              type="button"
-              className="px-4 py-2.5 rounded-xl font-semibold text-xs text-white bg-blue-600 hover:bg-blue-500 active:scale-98 transition shadow-lg shadow-blue-600/30 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>Nuevo Préstamo</span>
-            </button>
-          </Link>
-
+        {/* Norman Affordances: Clear, prominent primary action buttons */}
+        <div className="flex flex-wrap items-center gap-2.5">
           <Link to="/equipos/nuevo">
             <button
               type="button"
-              className="px-4 py-2.5 rounded-xl font-semibold text-xs text-slate-200 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-white bg-blue-600 hover:bg-blue-500 active:scale-98 transition shadow-lg shadow-blue-600/30 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              <Laptop className="w-4 h-4 text-blue-400" />
-              <span>Registrar Equipo</span>
+              <PlusCircle className="w-4 h-4" />
+              <span>Registrar Equipo Tecnológico</span>
+            </button>
+          </Link>
+
+          <Link to="/prestamos/nuevo">
+            <button
+              type="button"
+              className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-slate-100 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
+            >
+              <ArrowLeftRight className="w-4 h-4 text-emerald-400" />
+              <span>Registrar Nuevo Préstamo de Equipo</span>
+            </button>
+          </Link>
+
+          <Link to="/usuarios/nuevo">
+            <button
+              type="button"
+              className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-slate-100 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
+            >
+              <Users className="w-4 h-4 text-cyan-400" />
+              <span>Registrar Colaborador / Usuario</span>
             </button>
           </Link>
 
@@ -135,63 +146,63 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Grid of 6 KPIs (RF-13: Métricas de Control de Activos) */}
+      {/* Grid of 6 KPIs: Métricas de Control de Activos */}
       <section aria-label="Indicadores clave de rendimiento">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 gap-4">
           <StatsCard
             title="Total Activos"
             value={stats.totalEquipos}
-            description="Equipos inventariados"
-            badge="Catálogo Global"
+            description="Inventario total"
+            badge="Global"
             icon={Laptop}
             color="blue"
           />
           <StatsCard
             title="Disponibles"
             value={stats.equiposDisponibles}
-            description="Listos para préstamo"
-            badge={`${disponibilidadPorcentaje}% Capacidad`}
+            description="Listos para entrega"
+            badge={`${disponibilidadPorcentaje}% Cap.`}
             icon={CheckCircle2}
             color="emerald"
           />
           <StatsCard
             title="En Préstamo"
             value={stats.equiposPrestados}
-            description="Asignados a usuarios"
-            badge="Custodia Activa"
+            description="En uso asignado"
+            badge="En Custodia"
             icon={Clock}
             color="purple"
           />
           <StatsCard
             title="Mantenimiento"
             value={stats.equiposEnMantenimiento}
-            description="En revisión técnica"
-            badge="No Prestables"
+            description="Taller técnico"
+            badge="No Prestable"
             icon={AlertTriangle}
             color="amber"
           />
           <StatsCard
-            title="Historial Préstamos"
+            title="Préstamos"
             value={stats.totalPrestamos}
-            description={`${stats.prestamosActivos} activos en curso`}
-            badge="RF-11"
+            description={`${stats.prestamosActivos} en curso`}
+            badge="Historial"
             icon={ArrowLeftRight}
             color="indigo"
           />
           <StatsCard
-            title="Área Mayor Uso"
+            title="Mayor Demanda"
             value={stats.areaConMayorUso}
-            description={`${stats.areaMayorUsoCantidad} solicitudes`}
-            badge="RF-16"
+            description={`${stats.areaMayorUsoCantidad} asignaciones`}
+            badge="Área Top"
             icon={Building2}
             color="rose"
           />
         </div>
       </section>
 
-      {/* Analytics Row: Distribution by Area (RF-16) & Most Requested Assets (RF-15) */}
+      {/* Analytics Row: Distribution by Area & Most Requested Assets */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Préstamos por Área (RF-16) */}
+        {/* Préstamos por Área */}
         <div className="bg-white p-6 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -201,7 +212,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <h2 className="text-sm font-bold text-slate-900">
-                    Distribución por Área Funcional (RF-16)
+                    Distribución por Área Funcional
                   </h2>
                   <p className="text-xs text-slate-500">Demanda departamental acumulada</p>
                 </div>
@@ -256,7 +267,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Equipos Más Solicitados en Préstamo (RF-15) */}
+        {/* Equipos Más Solicitados en Préstamo */}
         <div className="bg-white p-6 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -266,7 +277,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <h2 className="text-sm font-bold text-slate-900">
-                    Equipos Más Solicitados (RF-15)
+                    Equipos Más Solicitados
                   </h2>
                   <p className="text-xs text-slate-500">Ranking de rotación e intensidad de uso</p>
                 </div>
@@ -338,7 +349,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Historial de Movimientos y Préstamos Recientes (RF-17) */}
+      {/* Historial de Movimientos y Préstamos Recientes */}
       <div className="bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden">
         <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-2.5">
@@ -347,7 +358,7 @@ export default function Dashboard() {
             </div>
             <div>
               <h2 className="text-base font-bold text-slate-900">
-                Movimientos y Préstamos Recientes (RF-17)
+                Movimientos y Préstamos Recientes
               </h2>
               <p className="text-xs text-slate-500">
                 Últimas operaciones de asignación y devolución registradas en el sistema

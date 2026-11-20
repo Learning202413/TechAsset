@@ -5,7 +5,6 @@ import Modal from "./Modal";
 import Button from "./Button";
 import { 
   LogOut, 
-  Home, 
   ChevronRight, 
   ShieldCheck, 
   AlertTriangle 
@@ -79,7 +78,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-6 py-3 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_0_rgba(0,0,0,0.03)]">
+      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-6 py-3 flex items-center justify-between sticky top-0 z-30 shrink-0 shadow-[0_1px_3px_0_rgba(0,0,0,0.03)]">
         {/* Left: Dynamic Breadcrumbs Navigation */}
         <nav aria-label="Ruta de navegación" className="flex items-center gap-1.5 text-xs">
           {breadcrumbs.map((crumb, idx) => (
@@ -103,17 +102,8 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Right: Quick actions, Live health status & User info */}
+        {/* Right: User info & logout */}
         <div className="flex items-center gap-3">
-          {/* Quick link to Landing */}
-          <Link
-            to="/"
-            className="text-xs font-semibold text-slate-600 hover:text-blue-600 transition inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-            title="Ir al Portal Institucional y Landing Page"
-          >
-            <Home className="w-3.5 h-3.5 text-slate-500" />
-            <span className="hidden sm:inline">Portal Landing</span>
-          </Link>
 
           {/* System Health Badge with Pulse & Tooltip */}
           <div

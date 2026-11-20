@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
+import Pagination from "../components/Pagination";
 import FormMessage from "../components/FormMessage";
 import { getPrestamos, registrarDevolucion } from "../services/prestamoService";
 import { 
@@ -29,8 +30,10 @@ export default function PrestamosList() {
 
   const [soloActivos, setSoloActivos] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 6;
 
-  // Devolución modal state (RF-10, RN-10)
+  // Devolución modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPrestamo, setSelectedPrestamo] = useState(null);
   const [observacionDevolucion, setObservacionDevolucion] = useState("");
@@ -43,6 +46,7 @@ export default function PrestamosList() {
       setError("");
       const data = await getPrestamos(soloActivos, searchTerm);
       setPrestamos(data);
+      setCurrentPage(1);
     } catch (err) {
       console.error(err);
       setError("Error de comunicación al consultar el historial de préstamos.");
@@ -80,7 +84,7 @@ export default function PrestamosList() {
     const trimmed = observacionDevolucion.trim();
     if (!trimmed || trimmed.length < 5) {
       setObservacionError(
-        "Toda devolución deberá registrar observaciones detalladas (mínimo 5 caracteres - Regla RN-10)."
+        "Toda devolución deberá registrar observaciones detalladas sobre el estado del equipo (mínimo 5 caracteres)."
       );
       return;
     }
@@ -105,7 +109,7 @@ export default function PrestamosList() {
     }
   };
 
-  // Quick suggestion chips for RN-10
+  // Quick suggestion chips
   const quickTemplates = [
     "Equipo entregado en perfecto estado operativo y con cargador completo.",
     "Operativo con desgaste regular por uso de oficina.",
@@ -113,6 +117,10 @@ export default function PrestamosList() {
   ];
 
   const totalActivosCount = prestamos.filter((p) => p.esActivo).length;
+  const paginatedPrestamos = prestamos.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   return (
     <div className="space-y-6">
@@ -123,25 +131,26 @@ export default function PrestamosList() {
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
               Control de Préstamos y Asignaciones
             </h1>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80">
-              RF-11 / RF-12
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80">
+              Registro de Custodia
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Historial de movimientos, trazabilidad de custodia y registro formal de devoluciones (RN-10)
+            Historial de movimientos, trazabilidad de custodia y registro formal de devoluciones con inspección física
           </p>
         </div>
 
         <Link to="/prestamos/nuevo">
           <Button variant="primary">
             <PlusCircle className="w-4 h-4" />
-            <span>Registrar Nuevo Préstamo</span>
+            <span>Registrar Nuevo Préstamo de Equipo</span>
           </Button>
         </Link>
       </div>
 
       <FormMessage type={messageType} message={message} />
 
+      {/* Modern Filter Tabs and Search Bar */}
       {/* Toolbar: High-Quality Pill Tabs Switcher & Search Bar */}
       <div className="bg-white p-4 lg:p-5 rounded-2xl shadow-xs border border-slate-200/80 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
         {/* Tactile Tab Pills Switcher */}
@@ -161,7 +170,7 @@ export default function PrestamosList() {
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            <span>Todos los Movimientos (RF-11)</span>
+            <span>Todos los Movimientos</span>
           </button>
 
           <button
@@ -179,7 +188,7 @@ export default function PrestamosList() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
             </span>
-            <span>Solo Préstamos Activos (RF-12)</span>
+            <span>Solo Préstamos Activos</span>
             {!soloActivos && totalActivosCount > 0 && (
               <span className="ml-1 px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-800 text-[10px] font-mono">
                 {totalActivosCount}
@@ -259,46 +268,47 @@ export default function PrestamosList() {
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs" aria-label="Tabla de préstamos de equipos">
+          <>
+            <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs min-w-[850px]" aria-label="Tabla de préstamos de equipos">
               <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                 <tr>
-                  <th scope="col" className="px-5 py-3.5">Equipo Asignado</th>
-                  <th scope="col" className="px-5 py-3.5">Colaborador (Responsable)</th>
-                  <th scope="col" className="px-5 py-3.5">Área</th>
-                  <th scope="col" className="px-5 py-3.5">Fecha Salida</th>
-                  <th scope="col" className="px-5 py-3.5">Fecha Devolución</th>
-                  <th scope="col" className="px-5 py-3.5">Observaciones</th>
-                  <th scope="col" className="px-5 py-3.5">Estado</th>
-                  <th scope="col" className="px-5 py-3.5 text-right">Acción</th>
+                  <th scope="col" className="px-4 py-3.5 min-w-[190px]">Equipo Asignado</th>
+                  <th scope="col" className="px-4 py-3.5 min-w-[180px]">Colaborador (Responsable)</th>
+                  <th scope="col" className="px-4 py-3.5 min-w-[110px]">Área</th>
+                  <th scope="col" className="px-4 py-3.5 whitespace-nowrap">Fecha Salida</th>
+                  <th scope="col" className="px-4 py-3.5 whitespace-nowrap">Fecha Devolución</th>
+                  <th scope="col" className="px-4 py-3.5 min-w-[150px] max-w-[200px]">Observaciones</th>
+                  <th scope="col" className="px-4 py-3.5 whitespace-nowrap">Estado</th>
+                  <th scope="col" className="px-4 py-3.5 text-right whitespace-nowrap">Acción</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
-                {prestamos.map((p) => (
+                {paginatedPrestamos.map((p) => (
                   <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
                     {/* Equipment with code pastille */}
-                    <td className="px-5 py-3.5">
-                      <div className="font-bold text-slate-900">{p.equipoNombre}</div>
+                    <td className="px-4 py-3.5 min-w-[190px]">
+                      <div className="font-bold text-slate-900 leading-snug">{p.equipoNombre}</div>
                       <div className="mt-1">
-                        <span className="font-mono font-bold text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
+                        <span className="inline-block whitespace-nowrap font-mono font-bold text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
                           {p.equipoCodigoPatrimonial}
                         </span>
                       </div>
                     </td>
 
                     {/* Collaborator with Avatar & details */}
-                    <td className="px-5 py-3.5">
+                    <td className="px-4 py-3.5 min-w-[180px]">
                       <div className="flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
                           {p.usuarioNombreCompleto
                             ? p.usuarioNombreCompleto.substring(0, 2).toUpperCase()
                             : "CO"}
                         </div>
-                        <div>
-                          <p className="font-semibold text-slate-800 leading-tight">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-slate-800 leading-tight truncate">
                             {p.usuarioNombreCompleto}
                           </p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">
+                          <p className="text-[10px] text-slate-400 mt-0.5 font-mono truncate">
                             {p.usuarioCorreo}
                           </p>
                         </div>
@@ -306,61 +316,63 @@ export default function PrestamosList() {
                     </td>
 
                     {/* Department */}
-                    <td className="px-5 py-3.5">
-                      <span className="text-slate-600 font-medium">
+                    <td className="px-4 py-3.5 min-w-[110px] whitespace-nowrap">
+                      <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700">
                         {p.usuarioArea}
                       </span>
                     </td>
 
-                    {/* Loan Date */}
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-1.5 text-slate-600 font-mono text-[11px]">
+                    {/* Loan Date (Compact Stacked) */}
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <div className="flex items-center gap-1.5 text-slate-700 text-xs font-medium">
                         <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                         <span>{new Date(p.fechaPrestamo).toLocaleDateString()}</span>
-                        <span className="text-slate-400 font-normal">
-                          {new Date(p.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </span>
+                      </div>
+                      <div className="text-[10px] text-slate-400 font-mono pl-5">
+                        {new Date(p.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </td>
 
-                    {/* Return Date */}
-                    <td className="px-5 py-3.5 whitespace-nowrap">
+                    {/* Return Date (Compact Stacked) */}
+                    <td className="px-4 py-3.5 whitespace-nowrap">
                       {p.fechaDevolucion ? (
-                        <div className="flex items-center gap-1.5 text-slate-700 font-mono text-[11px]">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span>{new Date(p.fechaDevolucion).toLocaleDateString()}</span>
-                          <span className="text-slate-400 font-normal">
+                        <div>
+                          <div className="flex items-center gap-1.5 text-slate-700 text-xs font-medium">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                            <span>{new Date(p.fechaDevolucion).toLocaleDateString()}</span>
+                          </div>
+                          <div className="text-[10px] text-slate-400 font-mono pl-5">
                             {new Date(p.fechaDevolucion).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </span>
+                          </div>
                         </div>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/80">
                           <Clock className="w-3 h-3 text-amber-500" />
-                          En custodia activa
+                          En custodia
                         </span>
                       )}
                     </td>
 
                     {/* Observations */}
-                    <td className="px-5 py-3.5 max-w-xs truncate" title={p.observacion}>
-                      <span className="text-slate-600 text-xs">
+                    <td className="px-4 py-3.5 min-w-[150px] max-w-[200px]" title={p.observacion}>
+                      <p className="text-slate-600 text-xs truncate">
                         {p.observacion || "Sin observaciones iniciales"}
-                      </span>
+                      </p>
                     </td>
 
                     {/* Status Badge */}
-                    <td className="px-5 py-3.5 whitespace-nowrap">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
                       <StatusBadge status={p.esActivo ? "Prestado" : "Finalizado"} />
                     </td>
 
                     {/* Action with clear Norman Signifier */}
-                    <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-right whitespace-nowrap">
                       {p.esActivo ? (
                         <Button
                           onClick={() => openDevolucionModal(p)}
                           variant="success"
                           className="!text-xs !py-1.5 !px-3 shadow-xs"
-                          title="Registrar devolución de equipo (RF-10 / RN-10)"
+                          title="Registrar devolución de equipo"
                           aria-label={`Registrar devolución de ${p.equipoNombre}`}
                         >
                           <FileCheck2 className="w-3.5 h-3.5" />
@@ -378,14 +390,22 @@ export default function PrestamosList() {
               </tbody>
             </table>
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalItems={prestamos.length}
+            pageSize={PAGE_SIZE}
+            onPageChange={setCurrentPage}
+          />
+        </>
         )}
       </div>
 
-      {/* Modal for RF-10 & RN-10: Registrar Devolución */}
+      {/* Modal: Registrar Devolución */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Registrar Devolución de Activo Tecnológico &bull; RF-10"
+        title="Registrar Devolución de Activo Tecnológico"
       >
         <form onSubmit={handleDevolucionSubmit} className="space-y-4">
           {/* Detailed summary card of the active asset being returned */}
@@ -418,11 +438,11 @@ export default function PrestamosList() {
             </div>
           </div>
 
-          {/* Business rule RN-10 reminder */}
+          {/* Protocol reminder */}
           <div className="p-3 bg-blue-50/80 rounded-xl border border-blue-200/80 text-xs text-blue-900 space-y-1">
             <p className="font-semibold flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
-              Regla de Negocio RN-10 Obligatoria:
+              Protocolo de Recepción e Inspección Física:
             </p>
             <p className="text-[11px] leading-relaxed text-blue-800">
               Toda devolución deberá registrar observaciones detalladas sobre el estado del equipo
@@ -478,7 +498,7 @@ export default function PrestamosList() {
             ) : observacionDevolucion.trim().length >= 5 ? (
               <p className="mt-1 text-[11px] text-emerald-600 font-medium flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                Cumple con el estándar de registro RN-10
+                Observación conforme para el cierre de custodia
               </p>
             ) : null}
           </div>

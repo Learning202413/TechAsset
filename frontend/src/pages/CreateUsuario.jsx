@@ -60,7 +60,7 @@ export default function CreateUsuario() {
     }
 
     if (!correo) {
-      newErrors.correo = "El correo electrónico es obligatorio (RN-08).";
+      newErrors.correo = "El correo electrónico institucional es obligatorio.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
       newErrors.correo = "Ingrese un formato de correo electrónico válido.";
     }
@@ -105,7 +105,7 @@ export default function CreateUsuario() {
 
   return (
     <PageContainer
-      title="Registrar Colaborador / Usuario (RF-01)"
+      title="Registrar Colaborador / Usuario"
       subtitle="Alta de personal en el sistema TechAsset para la asignación de activos tecnológicos"
       actions={
         <Link to="/usuarios">
@@ -143,7 +143,7 @@ export default function CreateUsuario() {
           </div>
 
           <InputField
-            label="Correo Electrónico Institucional (RN-08)"
+            label="Correo Electrónico Institucional"
             name="correo"
             type="email"
             value={formData.correo}

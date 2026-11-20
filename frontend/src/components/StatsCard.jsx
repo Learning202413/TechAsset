@@ -47,9 +47,24 @@ export default function StatsCard({
 
   const theme = themeMap[color] || themeMap.blue;
 
+  // Determine dynamic font size based on value length and type
+  const isTextValue = typeof value === "string" && isNaN(Number(value));
+  const valueLength = String(value ?? "").length;
+
+  let valueSizeClasses = "text-2xl lg:text-3xl font-extrabold";
+  if (isTextValue) {
+    if (valueLength > 12) {
+      valueSizeClasses = "text-sm sm:text-base font-bold";
+    } else if (valueLength > 6) {
+      valueSizeClasses = "text-base sm:text-lg font-bold";
+    } else {
+      valueSizeClasses = "text-lg sm:text-xl font-bold";
+    }
+  }
+
   return (
     <div
-      className={`relative overflow-hidden bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200 group flex flex-col justify-between ${theme.borderHover}`}
+      className={`relative overflow-hidden bg-white p-4 lg:p-4.5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group flex flex-col justify-between ${theme.borderHover}`}
     >
       {/* Top micro-accent line */}
       <div
@@ -57,30 +72,41 @@ export default function StatsCard({
         aria-hidden="true"
       />
 
-      {/* Header with Title and Icon */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">
-            {title}
-          </p>
-          <p className="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight mt-1.5 leading-none">
-            {value}
-          </p>
-        </div>
+      {/* Row 1: Title and Icon */}
+      <div className="flex items-center justify-between gap-2">
+        <span
+          className="text-[11px] font-bold text-slate-500 uppercase tracking-wider leading-tight"
+          title={title}
+        >
+          {title}
+        </span>
 
         {Icon && (
           <div
-            className={`p-2.5 rounded-xl border shrink-0 transition-all duration-200 ${theme.iconBox}`}
+            className={`p-2 rounded-xl border shrink-0 transition-all duration-200 ${theme.iconBox}`}
           >
-            <Icon className="w-5 h-5" aria-hidden="true" />
+            <Icon className="w-4 h-4" aria-hidden="true" />
           </div>
         )}
       </div>
 
-      {/* Footer / Context Descriptor (Shneiderman #8 - Reduce Short-Term Memory Load) */}
-      <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+      {/* Row 2: Value (Dedicated Full Width Space) */}
+      <div className="my-2 min-w-0">
+        <div
+          className={`${valueSizeClasses} text-slate-900 tracking-tight leading-snug truncate`}
+          title={String(value ?? "")}
+        >
+          {value}
+        </div>
+      </div>
+
+      {/* Row 3: Footer Descriptor & Badge */}
+      <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1.5 text-xs">
         {description && (
-          <span className="text-slate-500 font-medium truncate" title={description}>
+          <span
+            className="text-[11px] text-slate-500 font-medium truncate"
+            title={description}
+          >
             {description}
           </span>
         )}

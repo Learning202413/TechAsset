@@ -69,7 +69,7 @@ export default function Login() {
     const trimmed = correo.trim();
 
     if (!trimmed) {
-      newErrors.correo = "El correo electrónico institucional es obligatorio (RN-08).";
+      newErrors.correo = "El correo electrónico institucional es obligatorio.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       newErrors.correo = "Ingrese un formato de correo corporativo válido (@innovatech.com).";
     }
@@ -173,7 +173,7 @@ export default function Login() {
           </h1>
 
           <p className="text-slate-300 text-sm leading-relaxed mb-8">
-            Diseñado bajo los estándares de interacción humano-computador ISO 9241-210, Principios de Norman y las 8 Reglas de Oro de Shneiderman para erradicar inconsistencias operativas.
+            Plataforma integral para la administración ágil de activos, trazabilidad de custodias y control operativo institucional en tiempo real.
           </p>
 
           {/* Trust Metrics Grid */}
@@ -186,12 +186,12 @@ export default function Login() {
             <div className="border-l border-slate-800 pl-4">
               <p className="text-2xl font-black text-emerald-400">100%</p>
               <p className="text-[11px] font-bold text-emerald-400 uppercase tracking-wide">Trazabilidad</p>
-              <p className="text-[10px] text-slate-400">RN-01 a RN-05</p>
+              <p className="text-[10px] text-slate-400">Control de flujo</p>
             </div>
             <div className="border-l border-slate-800 pl-4">
               <p className="text-2xl font-black text-cyan-400">0</p>
               <p className="text-[11px] font-bold text-cyan-400 uppercase tracking-wide">Duplicados</p>
-              <p className="text-[10px] text-slate-400">RN-07 y RN-08</p>
+              <p className="text-[10px] text-slate-400">Códigos únicos</p>
             </div>
           </div>
 
@@ -216,8 +216,8 @@ export default function Login() {
 
         {/* Left Pane Footer */}
         <div className="relative z-10 flex items-center justify-between text-xs text-slate-500 border-t border-slate-800/80 pt-6">
-          <span>ISO 9241-210 &bull; WCAG 2.1 AA Compliant</span>
-          <span className="font-mono">Clean Architecture &bull; ASP.NET Core &bull; React</span>
+          <span>Seguridad Corporativa &bull; Alta Disponibilidad</span>
+          <span>Innovatech Solutions S.A.C. &bull; 2026</span>
         </div>
       </div>
 
@@ -267,7 +267,7 @@ export default function Login() {
                 htmlFor="correo" 
                 className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5"
               >
-                Correo Electrónico Institucional (RN-08) <span className="text-red-500">*</span>
+                Correo Electrónico Institucional <span className="text-red-500">*</span>
               </label>
               <div className="relative rounded-xl shadow-xs">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">

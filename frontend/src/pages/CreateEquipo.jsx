@@ -55,7 +55,7 @@ export default function CreateEquipo() {
     const marca = normalizeText(formData.marca);
 
     if (!codigo) {
-      newErrors.codigoPatrimonial = "El código patrimonial es obligatorio (RN-07).";
+      newErrors.codigoPatrimonial = "El código patrimonial es obligatorio.";
     } else if (codigo.length < 3) {
       newErrors.codigoPatrimonial = "El código patrimonial debe tener al menos 3 caracteres.";
     }
@@ -112,7 +112,7 @@ export default function CreateEquipo() {
 
   return (
     <PageContainer
-      title="Registrar Equipo Tecnológico (RF-05)"
+      title="Registrar Equipo Tecnológico"
       subtitle="Ingrese los datos del nuevo activo tecnológico institucional para Innovatech Solutions"
       actions={
         <Link to="/equipos">

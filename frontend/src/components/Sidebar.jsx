@@ -6,13 +6,7 @@ import {
   Laptop, 
   Users, 
   ArrowLeftRight, 
-  PlusCircle, 
-  Layers,
-  Globe,
-  Server,
-  Database,
-  ShieldCheck,
-  Activity
+  ShieldCheck 
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -36,11 +30,11 @@ export default function Sidebar() {
   return (
     <aside
       aria-label="Menú principal de navegación"
-      className="w-64 bg-slate-950 text-slate-200 min-h-screen p-4 flex flex-col justify-between shrink-0 border-r border-slate-800/80 select-none"
+      className="w-64 bg-slate-950 text-slate-200 h-screen sticky top-0 p-4 flex flex-col justify-between shrink-0 border-r border-slate-800/80 select-none z-30"
     >
-      <div className="space-y-6">
+      <div className="flex-1 flex flex-col min-h-0 space-y-6">
         {/* Brand / Executive Header */}
-        <div className="px-2 py-3 border-b border-slate-800/80 flex items-center gap-3">
+        <div className="px-2 py-3 border-b border-slate-800/80 flex items-center gap-3 shrink-0">
           <img 
             src={logoImg} 
             alt="TechAsset Logo" 
@@ -62,7 +56,7 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation Sections */}
-        <nav className="space-y-5" aria-label="Módulos de la aplicación">
+        <nav className="flex-1 overflow-y-auto space-y-5 pr-1" aria-label="Módulos de la aplicación">
           {/* Section: Principal */}
           <div>
             <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
@@ -87,10 +81,10 @@ export default function Sidebar() {
             </ul>
           </div>
 
-          {/* Section: Equipos */}
+          {/* Section: Módulos del Sistema */}
           <div>
             <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Gestión de Equipos
+              Módulos del Sistema
             </p>
             <ul className="space-y-1">
               <li>
@@ -109,30 +103,6 @@ export default function Sidebar() {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/equipos/nuevo" className={getLinkClass}>
-                  {({ isActive }) => (
-                    <>
-                      {renderActiveIndicator(isActive)}
-                      <PlusCircle
-                        className={`w-4 h-4 transition-transform duration-150 group-hover:scale-110 ${
-                          isActive ? "text-blue-400" : "text-slate-400"
-                        }`}
-                      />
-                      <span>Registrar Equipo</span>
-                    </>
-                  )}
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-
-          {/* Section: Préstamos */}
-          <div>
-            <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Gestión de Préstamos
-            </p>
-            <ul className="space-y-1">
-              <li>
                 <NavLink to="/prestamos" end className={getLinkClass}>
                   {({ isActive }) => (
                     <>
@@ -142,35 +112,11 @@ export default function Sidebar() {
                           isActive ? "text-blue-400" : "text-slate-400"
                         }`}
                       />
-                      <span>Historial y Préstamos</span>
+                      <span>Control de Préstamos</span>
                     </>
                   )}
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/prestamos/nuevo" className={getLinkClass}>
-                  {({ isActive }) => (
-                    <>
-                      {renderActiveIndicator(isActive)}
-                      <PlusCircle
-                        className={`w-4 h-4 transition-transform duration-150 group-hover:scale-110 ${
-                          isActive ? "text-blue-400" : "text-slate-400"
-                        }`}
-                      />
-                      <span>Registrar Préstamo</span>
-                    </>
-                  )}
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-
-          {/* Section: Usuarios */}
-          <div>
-            <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Gestión de Usuarios
-            </p>
-            <ul className="space-y-1">
               <li>
                 <NavLink to="/usuarios" end className={getLinkClass}>
                   {({ isActive }) => (
@@ -181,22 +127,7 @@ export default function Sidebar() {
                           isActive ? "text-blue-400" : "text-slate-400"
                         }`}
                       />
-                      <span>Colaboradores</span>
-                    </>
-                  )}
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/usuarios/nuevo" className={getLinkClass}>
-                  {({ isActive }) => (
-                    <>
-                      {renderActiveIndicator(isActive)}
-                      <PlusCircle
-                        className={`w-4 h-4 transition-transform duration-150 group-hover:scale-110 ${
-                          isActive ? "text-blue-400" : "text-slate-400"
-                        }`}
-                      />
-                      <span>Registrar Usuario</span>
+                      <span>Colaboradores y Usuarios</span>
                     </>
                   )}
                 </NavLink>
@@ -206,67 +137,22 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* Footer Area: System Health + User Preview + Portal Link */}
-      <div className="pt-4 border-t border-slate-800/80 space-y-3">
-        {/* System Health Card (Live Kestrel API + PostgreSQL) */}
-        <div className="bg-slate-900/90 border border-slate-800/90 rounded-xl p-2.5 text-xs shadow-inner">
-          <div className="flex items-center justify-between mb-2">
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-300">
-              <Activity className="w-3.5 h-3.5 text-emerald-400" />
-              Estado de Servicios
-            </span>
-            <span className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Online
-            </span>
-          </div>
-          <div className="space-y-1.5 text-[11px] text-slate-400 font-mono">
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Server className="w-3 h-3 text-slate-400" />
-                API Kestrel .NET 9
-              </span>
-              <span className="text-emerald-400 font-semibold text-[10px]">OK</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Database className="w-3 h-3 text-slate-400" />
-                PostgreSQL 16
-              </span>
-              <span className="text-emerald-400 font-semibold text-[10px]">OK</span>
-            </div>
-          </div>
-        </div>
-
-        {/* User Session Quick Glance */}
-        <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800/60">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
+      {/* Footer Area: User Session Profile (Permanently docked at bottom) */}
+      <div className="pt-3 border-t border-slate-800/80 shrink-0 mt-auto">
+        <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-slate-900/60 border border-slate-800/60">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
             {user?.iniciales || "TI"}
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold text-slate-200 truncate leading-tight">
               {user?.nombre || "Carlos Mendoza"}
             </p>
-            <p className="text-[10px] text-slate-400 truncate flex items-center gap-1">
+            <p className="text-[10px] text-slate-400 truncate flex items-center gap-1 mt-0.5">
               <ShieldCheck className="w-3 h-3 text-blue-400 inline shrink-0" />
               {user?.rol || "Administrador TI"}
             </p>
           </div>
         </div>
-
-        {/* Portal Landing Link */}
-        <NavLink
-          to="/"
-          className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/60 transition group border border-transparent hover:border-slate-800"
-        >
-          <span className="flex items-center gap-2">
-            <Globe className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
-            <span>Portal Landing</span>
-          </span>
-          <span className="text-[10px] text-slate-400 font-mono group-hover:text-slate-300">
-            &rarr;
-          </span>
-        </NavLink>
       </div>
     </aside>
   );

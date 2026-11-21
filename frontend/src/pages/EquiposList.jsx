@@ -295,7 +295,7 @@ export default function EquiposList() {
         {isLoading ? (
           <div className="p-16 text-center text-slate-500 space-y-3">
             <RefreshCw className="w-7 h-7 animate-spin mx-auto text-blue-600" />
-            <p className="text-xs font-semibold">Consultando catálogo de activos en PostgreSQL...</p>
+            <p className="text-xs font-semibold">Cargando catálogo de equipos tecnológicos...</p>
           </div>
         ) : error ? (
           <div className="p-8 text-center text-red-600 bg-red-50 space-y-2">

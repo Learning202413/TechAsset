@@ -37,7 +37,7 @@ export default function Dashboard() {
       setStats(data);
     } catch (err) {
       console.error(err);
-      setError("No se pudieron conectar los indicadores con el servidor Kestrel / PostgreSQL.");
+      setError("No fue posible cargar los indicadores del sistema. Por favor verifique la conexión.");
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -55,8 +55,8 @@ export default function Dashboard() {
           <RefreshCw className="w-8 h-8 animate-spin text-blue-600" />
         </div>
         <div className="text-center">
-          <p className="text-base font-bold text-slate-800">Sincronizando Dashboard Ejecutivo...</p>
-          <p className="text-xs text-slate-500 mt-1">Consultando métricas en PostgreSQL mediante Kestrel API</p>
+          <p className="text-base font-bold text-slate-800">Sincronizando Indicadores...</p>
+          <p className="text-xs text-slate-500 mt-1">Cargando métricas de inventario y préstamos en tiempo real</p>
         </div>
       </div>
     );

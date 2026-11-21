@@ -108,7 +108,7 @@ export default function Header() {
           {/* System Health Badge with Pulse & Tooltip */}
           <div
             className="hidden md:inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 shadow-2xs select-none"
-            title="Kestrel API .NET 9 & PostgreSQL 16 activos y sincronizados. Latencia promedio < 12ms."
+            title="Servicios institucionales activos y sincronizados."
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -163,7 +163,7 @@ export default function Header() {
               <p className="font-bold">¿Está seguro de cerrar su sesión de trabajo?</p>
               <p className="mt-1 text-amber-800/90 leading-relaxed">
                 Su sesión activa como <strong>{user?.nombre || "Administrador TI"}</strong> se dará por concluida.
-                Las transacciones y préstamos registrados permanecerán seguros en la base de datos PostgreSQL.
+                Todos los registros y movimientos realizados se encuentran respaldados de forma segura en el sistema.
               </p>
             </div>
           </div>

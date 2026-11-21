@@ -458,7 +458,7 @@ export default function Landing() {
             <Link to="/dashboard" className="hover:text-blue-600 transition">Dashboard</Link>
             <Link to="/equipos" className="hover:text-blue-600 transition">Equipos</Link>
             <Link to="/prestamos" className="hover:text-blue-600 transition">Préstamos</Link>
-            <a href="http://localhost:5153/swagger" target="_blank" rel="noreferrer" className="hover:text-blue-600 transition">Swagger API</a>
+            <Link to="/usuarios" className="hover:text-blue-600 transition">Colaboradores</Link>
           </div>
           <p className="text-slate-400">
             Control Institucional de TI &bull; Innovatech Solutions S.A.C.

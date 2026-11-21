@@ -7,10 +7,11 @@ import {
   LogOut, 
   ChevronRight, 
   ShieldCheck, 
-  AlertTriangle 
+  AlertTriangle,
+  Menu
 } from "lucide-react";
 
-export default function Header() {
+export default function Header({ onToggleMobileMenu }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,29 +75,42 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-6 py-3 flex items-center justify-between sticky top-0 z-30 shrink-0 shadow-[0_1px_3px_0_rgba(0,0,0,0.03)]">
-        {/* Left: Dynamic Breadcrumbs Navigation */}
-        <nav aria-label="Ruta de navegación" className="flex items-center gap-1.5 text-xs">
-          {breadcrumbs.map((crumb, idx) => (
-            <div key={crumb.label} className="flex items-center gap-1.5">
-              {idx > 0 && (
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" aria-hidden="true" />
-              )}
-              {crumb.current ? (
-                <span className="font-bold text-slate-900 px-2 py-0.5 rounded-md bg-slate-100/80 border border-slate-200/60">
-                  {crumb.label}
-                </span>
-              ) : (
-                <Link
-                  to={crumb.to}
-                  className="text-slate-500 hover:text-blue-600 transition-colors font-medium px-1 py-0.5 rounded hover:bg-slate-50"
-                >
-                  {crumb.label}
-                </Link>
-              )}
-            </div>
-          ))}
-        </nav>
+      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-30 shrink-0 shadow-[0_1px_3px_0_rgba(0,0,0,0.03)]">
+        {/* Left: Mobile Menu Toggle & Dynamic Breadcrumbs Navigation */}
+        <div className="flex items-center gap-2.5 min-w-0 pr-2">
+          {/* Mobile Hamburger Button (Norman Signifier: Menu affordance) */}
+          <button
+            type="button"
+            onClick={onToggleMobileMenu}
+            className="lg:hidden p-2 -ml-1.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shrink-0"
+            aria-label="Abrir menú de navegación móvil"
+            title="Abrir menú principal"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+
+          <nav aria-label="Ruta de navegación" className="flex items-center gap-1.5 text-xs min-w-0">
+            {breadcrumbs.map((crumb, idx) => (
+              <div key={crumb.label} className="flex items-center gap-1.5 min-w-0">
+                {idx > 0 && (
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" aria-hidden="true" />
+                )}
+                {crumb.current ? (
+                  <span className="font-bold text-slate-900 px-2 py-0.5 rounded-md bg-slate-100/80 border border-slate-200/60 truncate">
+                    {crumb.label}
+                  </span>
+                ) : (
+                  <Link
+                    to={crumb.to}
+                    className="text-slate-500 hover:text-blue-600 transition-colors font-medium px-1 py-0.5 rounded hover:bg-slate-50 truncate hidden sm:inline"
+                  >
+                    {crumb.label}
+                  </Link>
+                )}
+              </div>
+            ))}
+          </nav>
+        </div>
 
         {/* Right: User info & logout */}
         <div className="flex items-center gap-3">

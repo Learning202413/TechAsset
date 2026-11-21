@@ -175,6 +175,7 @@ export default function Login({ initialView = "login" }) {
 
         {/* Top Header in Left Pane */}
         <div className="relative z-10 flex items-center justify-between">
+          {/* Brand link */}
           <Link to="/" className="flex items-center gap-3.5 group">
             <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center p-2 shadow-xl shadow-blue-500/25 group-hover:scale-105 transition border border-white/20 shrink-0">
               <img 
@@ -192,11 +193,6 @@ export default function Login({ initialView = "login" }) {
               </span>
             </div>
           </Link>
-
-          <span className="text-xs font-medium text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 px-3 py-1 rounded-full flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Servicios en Línea
-          </span>
         </div>
 
         {/* Central Value Content */}

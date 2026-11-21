@@ -7,6 +7,7 @@ import SelectField from "../components/SelectField";
 import FormMessage from "../components/FormMessage";
 import Pagination from "../components/Pagination";
 import { getEquipos, updateEstadoEquipo, deleteEquipo } from "../services/equipoService";
+import { useAuth } from "../context/AuthContext";
 import { 
   PlusCircle, 
   Search, 
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 export default function EquiposList() {
+  const { canManageEquipos, canDeleteEquipos, isColaborador } = useAuth();
   const [equipos, setEquipos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -192,12 +194,14 @@ export default function EquiposList() {
           </p>
         </div>
 
-        <Link to="/equipos/nuevo">
-          <Button variant="primary">
-            <PlusCircle className="w-4 h-4" />
-            <span>Nuevo Equipo</span>
-          </Button>
-        </Link>
+        {canManageEquipos && (
+          <Link to="/equipos/nuevo">
+            <Button variant="primary">
+              <PlusCircle className="w-4 h-4" />
+              <span>Nuevo Equipo</span>
+            </Button>
+          </Link>
+        )}
       </div>
 
       <FormMessage type={messageType} message={message} />
@@ -374,25 +378,29 @@ export default function EquiposList() {
                   </div>
 
                   {/* Acciones Móviles */}
-                  <div className="grid grid-cols-2 gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => openStatusModal(e)}
-                      className="w-full py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Estado</span>
-                    </button>
+                  {canManageEquipos && (
+                    <div className={`grid ${canDeleteEquipos ? "grid-cols-2" : "grid-cols-1"} gap-2 pt-1`}>
+                      <button
+                        type="button"
+                        onClick={() => openStatusModal(e)}
+                        className="w-full py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Estado</span>
+                      </button>
 
-                    <button
-                      type="button"
-                      onClick={() => openDeleteModal(e)}
-                      className="w-full py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                      <span>Eliminar</span>
-                    </button>
-                  </div>
+                      {canDeleteEquipos && (
+                        <button
+                          type="button"
+                          onClick={() => openDeleteModal(e)}
+                          className="w-full py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                          <span>Eliminar</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -453,31 +461,39 @@ export default function EquiposList() {
 
                     {/* Actions with Norman Signifiers */}
                     <td className="px-4 py-3.5 text-right whitespace-nowrap space-x-1.5">
-                      <button
-                        type="button"
-                        onClick={() => openStatusModal(e)}
-                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
-                        title="Actualizar estado operativo del equipo"
-                        aria-label={`Actualizar estado del equipo ${e.codigoPatrimonial}`}
-                      >
-                        <Edit3 className="w-3 h-3" />
-                        <span>Estado</span>
-                      </button>
+                      {canManageEquipos ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => openStatusModal(e)}
+                            className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
+                            title="Actualizar estado operativo del equipo"
+                            aria-label={`Actualizar estado del equipo ${e.codigoPatrimonial}`}
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>Estado</span>
+                          </button>
 
-                      <button
-                        type="button"
-                        onClick={() => openDeleteModal(e)}
-                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-red-500/20 cursor-pointer"
-                        title={
-                          e.totalPrestamos > 0
-                            ? "Equipo con historial: protegido para auditoría institucional"
-                            : "Eliminar equipo del catálogo"
-                        }
-                        aria-label={`Eliminar equipo ${e.codigoPatrimonial}`}
-                      >
-                        <Trash2 className="w-3 h-3 text-red-500" />
-                        <span>Eliminar</span>
-                      </button>
+                          {canDeleteEquipos && (
+                            <button
+                              type="button"
+                              onClick={() => openDeleteModal(e)}
+                              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-red-500/20 cursor-pointer"
+                              title={
+                                e.totalPrestamos > 0
+                                  ? "Equipo con historial: protegido para auditoría institucional"
+                                  : "Eliminar equipo del catálogo"
+                              }
+                              aria-label={`Eliminar equipo ${e.codigoPatrimonial}`}
+                            >
+                              <Trash2 className="w-3 h-3 text-red-500" />
+                              <span>Eliminar</span>
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-[11px] font-medium text-slate-400 italic">Solo lectura</span>
+                      )}
                     </td>
                   </tr>
                 ))}

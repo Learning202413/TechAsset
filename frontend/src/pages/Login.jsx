@@ -48,7 +48,7 @@ export default function Login({ initialView = "login" }) {
     {
       id: "admin",
       nombre: "Carlos Mendoza Ramos",
-      rol: "Administrador de Sistemas (Admin TI)",
+      rol: "Administrador de Sistemas",
       area: "Tecnología & Infraestructura",
       correo: "carlos.mendoza@innovatech.com",
       foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
@@ -57,19 +57,19 @@ export default function Login({ initialView = "login" }) {
     {
       id: "soporte",
       nombre: "Sofía Valenzuela",
-      rol: "Responsable de Soporte TI",
-      area: "Soporte y Despacho Operativo",
+      rol: "Responsable de Tecnología",
+      area: "Soporte y Operaciones",
       correo: "soporte@innovatech.com",
       foto: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
       badgeColor: "bg-indigo-100 text-indigo-800 border-indigo-200"
     },
     {
       id: "colaborador",
-      nombre: "Juan Pérez",
-      rol: "Colaborador Institucional",
+      nombre: "Ana María Pérez",
+      rol: "Colaborador",
       area: "Desarrollo de Software",
-      correo: "ana.perez@innovatech.com", // Linked to existing demo account
-      foto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+      correo: "ana.perez@innovatech.com",
+      foto: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=300&q=80",
       badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200"
     }
   ];
@@ -696,9 +696,7 @@ export default function Login({ initialView = "login" }) {
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span>Innovatech Solutions S.A.C. &bull; 2026</span>
           </div>
-          <Link to="/dashboard" className="text-blue-600 font-semibold hover:underline">
-            Entrar como Invitado &rarr;
-          </Link>
+          <span className="text-[11px] text-slate-400">Seguridad Institucional</span>
         </div>
       </div>
     </div>

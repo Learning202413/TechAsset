@@ -6,6 +6,7 @@ import Modal from "../components/Modal";
 import Pagination from "../components/Pagination";
 import FormMessage from "../components/FormMessage";
 import { getPrestamos, registrarDevolucion } from "../services/prestamoService";
+import { useAuth } from "../context/AuthContext";
 import { 
   PlusCircle, 
   Search, 
@@ -22,6 +23,7 @@ import {
 } from "lucide-react";
 
 export default function PrestamosList() {
+  const { canManagePrestamos, isColaborador } = useAuth();
   const [prestamos, setPrestamos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -140,12 +142,14 @@ export default function PrestamosList() {
           </p>
         </div>
 
-        <Link to="/prestamos/nuevo">
-          <Button variant="primary">
-            <PlusCircle className="w-4 h-4" />
-            <span>Nuevo Préstamo</span>
-          </Button>
-        </Link>
+        {canManagePrestamos && (
+          <Link to="/prestamos/nuevo">
+            <Button variant="primary">
+              <PlusCircle className="w-4 h-4" />
+              <span>Nuevo Préstamo</span>
+            </Button>
+          </Link>
+        )}
       </div>
 
       <FormMessage type={messageType} message={message} />
@@ -353,7 +357,7 @@ export default function PrestamosList() {
                   )}
 
                   {/* Acción Devolver Móvil */}
-                  {p.esActivo && (
+                  {p.esActivo && canManagePrestamos && (
                     <Button
                       onClick={() => openDevolucionModal(p)}
                       variant="success"
@@ -473,19 +477,26 @@ export default function PrestamosList() {
                         <StatusBadge status={p.esActivo ? "Prestado" : "Finalizado"} />
                       </td>
 
-                      {/* Action */}
+                      {/* Action according to Role */}
                       <td className="px-3.5 py-3.5 text-right whitespace-nowrap align-middle">
                         {p.esActivo ? (
-                          <Button
-                            onClick={() => openDevolucionModal(p)}
-                            variant="success"
-                            className="!text-xs !py-1 !px-2.5 shadow-xs"
-                            title="Registrar devolución de equipo"
-                            aria-label={`Registrar devolución de ${p.equipoNombre}`}
-                          >
-                            <FileCheck2 className="w-3.5 h-3.5" />
-                            <span>Devolver</span>
-                          </Button>
+                          canManagePrestamos ? (
+                            <Button
+                              onClick={() => openDevolucionModal(p)}
+                              variant="success"
+                              className="!text-xs !py-1 !px-2.5 shadow-xs"
+                              title="Registrar devolución de equipo"
+                              aria-label={`Registrar devolución de ${p.equipoNombre}`}
+                            >
+                              <FileCheck2 className="w-3.5 h-3.5" />
+                              <span>Devolver</span>
+                            </Button>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60">
+                              <Clock className="w-2.5 h-2.5 text-amber-500" />
+                              En custodia
+                            </span>
+                          )
                         ) : (
                           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 px-1 py-0.5">
                             <CheckCircle className="w-3 h-3 text-slate-400" />

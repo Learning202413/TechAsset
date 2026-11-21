@@ -1,26 +1,32 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext(null);
+
+export const ROLES = {
+  ADMIN: "Administrador de Sistemas",
+  SOPORTE: "Responsable de Tecnología",
+  COLABORADOR: "Colaborador",
+};
 
 export const DEMO_USERS = [
   {
     correo: "carlos.mendoza@innovatech.com",
     nombre: "Carlos Mendoza Ramos",
-    rol: "Administrador de Sistemas",
-    area: "Tecnología",
+    rol: ROLES.ADMIN,
+    area: "Tecnología & Infraestructura",
     iniciales: "CM",
   },
   {
     correo: "soporte@innovatech.com",
-    nombre: "Jorge Silva Vega",
-    rol: "Responsable de Tecnología (Soporte TI)",
+    nombre: "Sofía Valenzuela",
+    rol: ROLES.SOPORTE,
     area: "Soporte y Operaciones",
-    iniciales: "JS",
+    iniciales: "SV",
   },
   {
     correo: "ana.perez@innovatech.com",
     nombre: "Ana María Pérez",
-    rol: "Colaborador",
+    rol: ROLES.COLABORADOR,
     area: "Desarrollo de Software",
     iniciales: "AP",
   },
@@ -30,14 +36,13 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem("techasset_session");
-      return saved ? JSON.parse(saved) : DEMO_USERS[0]; // Default logged-in admin for ease of testing
+      return saved ? JSON.parse(saved) : DEMO_USERS[0];
     } catch {
       return DEMO_USERS[0];
     }
   });
 
-  const login = (correo, password) => {
-    // Check if matching demo user
+  const login = (correo) => {
     const matched = DEMO_USERS.find(
       (u) => u.correo.toLowerCase() === correo.trim().toLowerCase()
     );
@@ -45,7 +50,7 @@ export function AuthProvider({ children }) {
     const activeUser = matched || {
       correo: correo.trim().toLowerCase(),
       nombre: correo.split("@")[0].replace(".", " ").toUpperCase(),
-      rol: "Colaborador",
+      rol: ROLES.COLABORADOR,
       area: "Operaciones",
       iniciales: correo.substring(0, 2).toUpperCase(),
     };
@@ -60,8 +65,34 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("techasset_session");
   };
 
+  // RBAC Permission Computations
+  const rolNormalized = (user?.rol || "").toLowerCase();
+  const isAdmin = rolNormalized.includes("admin");
+  const isTech = rolNormalized.includes("tecnolog") || rolNormalized.includes("soporte");
+  const isColaborador = !isAdmin && !isTech;
+
+  const canManageUsers = isAdmin; // Solo Administrador
+  const canManageEquipos = isAdmin || isTech; // Admin y Soporte pueden registrar y cambiar estado
+  const canDeleteEquipos = isAdmin; // Solo Administrador puede eliminar activos
+  const canManagePrestamos = isAdmin || isTech; // Admin y Soporte pueden registrar préstamos y devoluciones
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, demoUsers: DEMO_USERS }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        isAuthenticated: !!user,
+        demoUsers: DEMO_USERS,
+        isAdmin,
+        isTech,
+        isColaborador,
+        canManageUsers,
+        canManageEquipos,
+        canDeleteEquipos,
+        canManagePrestamos,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

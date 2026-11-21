@@ -19,10 +19,13 @@ import {
   Sparkles,
   ChevronRight,
   ShieldAlert,
+  ShieldCheck,
   ArrowUpRight
 } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Dashboard() {
+  const { user, canManageUsers, canManageEquipos, canManagePrestamos, isColaborador } = useAuth();
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -101,43 +104,56 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Quick action buttons */}
+        {/* Quick action buttons according to user role */}
         <div className="flex flex-wrap items-center gap-2.5">
-          <Link to="/equipos/nuevo">
-            <button
-              type="button"
-              className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-white bg-blue-600 hover:bg-blue-500 active:scale-98 transition shadow-lg shadow-blue-600/30 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>Nuevo Equipo</span>
-            </button>
-          </Link>
+          {canManageEquipos && (
+            <Link to="/equipos/nuevo">
+              <button
+                type="button"
+                className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-white bg-blue-600 hover:bg-blue-500 active:scale-98 transition shadow-lg shadow-blue-600/30 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
+              >
+                <PlusCircle className="w-4 h-4" />
+                <span>Nuevo Equipo</span>
+              </button>
+            </Link>
+          )}
 
-          <Link to="/prestamos/nuevo">
-            <button
-              type="button"
-              className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-slate-100 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
-            >
-              <ArrowLeftRight className="w-4 h-4 text-emerald-400" />
-              <span>Nuevo Préstamo</span>
-            </button>
-          </Link>
+          {canManagePrestamos && (
+            <Link to="/prestamos/nuevo">
+              <button
+                type="button"
+                className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-slate-100 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 cursor-pointer"
+              >
+                <ArrowLeftRight className="w-4 h-4 text-emerald-400" />
+                <span>Nuevo Préstamo</span>
+              </button>
+            </Link>
+          )}
 
-          <Link to="/usuarios/nuevo">
-            <button
-              type="button"
-              className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-slate-100 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
-            >
-              <Users className="w-4 h-4 text-cyan-400" />
-              <span>Nuevo Colaborador</span>
-            </button>
-          </Link>
+          {canManageUsers && (
+            <Link to="/usuarios/nuevo">
+              <button
+                type="button"
+                className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-slate-100 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 cursor-pointer"
+              >
+                <Users className="w-4 h-4 text-cyan-400" />
+                <span>Nuevo Colaborador</span>
+              </button>
+            </Link>
+          )}
+
+          {isColaborador && (
+            <div className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-blue-500/10 border border-blue-400/30 text-blue-300 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-blue-400" />
+              <span>Modo Consulta &bull; Colaborador</span>
+            </div>
+          )}
 
           <button
             type="button"
             onClick={() => loadData(true)}
             disabled={isRefreshing}
-            className="p-2.5 rounded-xl text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 transition border border-slate-700/80 disabled:opacity-50"
+            className="p-2.5 rounded-xl text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 transition border border-slate-700/80 disabled:opacity-50 cursor-pointer"
             title="Actualizar indicadores del sistema"
             aria-label="Actualizar indicadores del sistema"
           >

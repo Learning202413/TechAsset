@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
-  const { user } = useAuth();
+  const { user, canManageUsers } = useAuth();
 
   const getLinkClass = ({ isActive }) =>
     `relative flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all duration-150 group ${
@@ -146,21 +146,23 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
                     )}
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink to="/usuarios" end onClick={onClose} className={getLinkClass}>
-                    {({ isActive }) => (
-                      <>
-                        {renderActiveIndicator(isActive)}
-                        <Users
-                          className={`w-4 h-4 transition-transform duration-150 group-hover:scale-110 ${
-                            isActive ? "text-blue-400" : "text-slate-400"
-                          }`}
-                        />
-                        <span>Colaboradores y Usuarios</span>
-                      </>
-                    )}
-                  </NavLink>
-                </li>
+                {canManageUsers && (
+                  <li>
+                    <NavLink to="/usuarios" end onClick={onClose} className={getLinkClass}>
+                      {({ isActive }) => (
+                        <>
+                          {renderActiveIndicator(isActive)}
+                          <Users
+                            className={`w-4 h-4 transition-transform duration-150 group-hover:scale-110 ${
+                              isActive ? "text-blue-400" : "text-slate-400"
+                            }`}
+                          />
+                          <span>Colaboradores y Usuarios</span>
+                        </>
+                      )}
+                    </NavLink>
+                  </li>
+                )}
               </ul>
             </div>
           </nav>

@@ -157,19 +157,12 @@ export default function Landing() {
               Centralizá el parque de equipos de <strong>Innovatech Solutions S.A.C.</strong>, gestioná asignaciones en segundos y garantizá la custodia formal de hardware con una plataforma moderna, ágil y auditable.
             </p>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="mt-8 flex items-center justify-center">
               <Link to="/login" className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-600/25 hover:shadow-blue-600/35 transition-all inline-flex items-center justify-center gap-2.5 cursor-pointer">
                   <LogIn className="w-4 h-4" />
                   <span>Iniciar Sesión</span>
                   <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
-
-              <Link to="/dashboard" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm border border-slate-300 shadow-2xs transition inline-flex items-center justify-center gap-2 cursor-pointer">
-                  <BarChart3 className="w-4 h-4 text-slate-500" />
-                  <span>Ver Dashboard</span>
                 </button>
               </Link>
             </div>

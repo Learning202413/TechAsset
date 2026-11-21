@@ -7,10 +7,12 @@ import Button from "../components/Button";
 import FormMessage from "../components/FormMessage";
 import { createUsuario } from "../services/usuarioService";
 import { normalizeText } from "../utils/normalizeText";
-import { ArrowLeft, Check } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { ArrowLeft, Check, ShieldAlert } from "lucide-react";
 
 export default function CreateUsuario() {
   const navigate = useNavigate();
+  const { canManageUsers } = useAuth();
 
   const [formData, setFormData] = useState({
     nombres: "",
@@ -102,6 +104,32 @@ export default function CreateUsuario() {
       setIsSubmitting(false);
     }
   };
+
+  if (!canManageUsers) {
+    return (
+      <PageContainer
+        title="Acceso Restringido"
+        subtitle="Módulo exclusivo para Administradores de Sistemas"
+      >
+        <div className="bg-white p-8 rounded-2xl shadow-xs border border-slate-200 text-center max-w-lg mx-auto my-12 space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto border border-amber-200">
+            <ShieldAlert className="w-7 h-7" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-slate-900">Permisos Insuficientes</h3>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              El registro de nuevos colaboradores institucionales está reservado para el rol <strong>Administrador de Sistemas</strong>.
+            </p>
+          </div>
+          <Link to="/dashboard">
+            <Button variant="primary" className="mx-auto !text-xs mt-2">
+              Volver al Dashboard
+            </Button>
+          </Link>
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer

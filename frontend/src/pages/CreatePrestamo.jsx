@@ -8,10 +8,12 @@ import FormMessage from "../components/FormMessage";
 import { createPrestamo } from "../services/prestamoService";
 import { getEquipos } from "../services/equipoService";
 import { getUsuarios } from "../services/usuarioService";
-import { ArrowLeft, Check, RefreshCw } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { ArrowLeft, Check, RefreshCw, ShieldAlert } from "lucide-react";
 
 export default function CreatePrestamo() {
   const navigate = useNavigate();
+  const { canManagePrestamos } = useAuth();
 
   const [usuarios, setUsuarios] = useState([]);
   const [equipos, setEquipos] = useState([]);
@@ -109,6 +111,32 @@ export default function CreatePrestamo() {
     value: eq.id,
     label: `${eq.codigoPatrimonial} - ${eq.nombre} (${eq.categoria})`,
   }));
+
+  if (!canManagePrestamos) {
+    return (
+      <PageContainer
+        title="Acceso Restringido"
+        subtitle="Módulo exclusivo para Administradores y Personal de TI"
+      >
+        <div className="bg-white p-8 rounded-2xl shadow-xs border border-slate-200 text-center max-w-lg mx-auto my-12 space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto border border-amber-200">
+            <ShieldAlert className="w-7 h-7" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-slate-900">Permisos Insuficientes</h3>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              La asignación y despacho de préstamos de equipamiento está reservada para personal de Tecnología y Administradores.
+            </p>
+          </div>
+          <Link to="/prestamos">
+            <Button variant="primary" className="mx-auto !text-xs mt-2">
+              Volver a Préstamos
+            </Button>
+          </Link>
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer

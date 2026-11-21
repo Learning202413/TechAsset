@@ -23,3 +23,8 @@ scratch/
 # IDE
 .vscode/
 .idea/
+
+# Documents & Binaries
+*.docx
+*.pdf
+~$*

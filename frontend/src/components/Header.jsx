@@ -114,21 +114,6 @@ export default function Header({ onToggleMobileMenu }) {
 
         {/* Right: User info & logout */}
         <div className="flex items-center gap-3">
-
-          {/* System Health Badge with Pulse & Tooltip */}
-          <div
-            className="hidden md:inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 shadow-2xs select-none"
-            title="Servicios institucionales activos y sincronizados."
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="tracking-tight text-[11px]">Sistemas Operativos</span>
-          </div>
-
-          <div className="h-5 w-px bg-slate-200 hidden sm:block" aria-hidden="true" />
-
           {/* Collaborator Profile & Accessible Logout */}
           <div className="flex items-center gap-2.5 pl-1">
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center ring-2 ring-blue-500/20 shadow-sm shrink-0">

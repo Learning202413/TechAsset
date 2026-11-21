@@ -13,19 +13,30 @@ import {
   Sparkles,
   AlertCircle,
   ArrowRight,
-  Check
+  Check,
+  CheckCircle2,
+  KeyRound,
+  Send,
+  RefreshCw
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import FormMessage from "../components/FormMessage";
 
-export default function Login() {
+export default function Login({ initialView = "login" }) {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  const [view, setView] = useState(initialView); // "login" | "forgot"
   const [correo, setCorreo] = useState("carlos.mendoza@innovatech.com");
   const [password, setPassword] = useState("Innovatech2026*");
   const [showPassword, setShowPassword] = useState(false);
   const [recordar, setRecordar] = useState(true);
+
+  // Estados para Recuperación de Contraseña
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSubmitting, setForgotSubmitting] = useState(false);
+  const [forgotError, setForgotError] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState(false);
 
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
@@ -118,6 +129,31 @@ export default function Login() {
     setErrors({});
     setMessage(`Perfil de ${persona.rol} cargado con credenciales oficiales.`);
     setMessageType("success");
+  };
+
+  const handleGoToForgot = () => {
+    setForgotEmail(correo || "");
+    setForgotError("");
+    setForgotSuccess(false);
+    setView("forgot");
+  };
+
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault();
+    const trimmed = forgotEmail.trim();
+    if (!trimmed) {
+      setForgotError("El correo electrónico institucional es obligatorio.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setForgotError("Ingrese un formato de correo corporativo válido (@innovatech.com).");
+      return;
+    }
+    setForgotError("");
+    setForgotSubmitting(true);
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    setForgotSubmitting(false);
+    setForgotSuccess(true);
   };
 
   return (
@@ -229,253 +265,434 @@ export default function Login() {
       <div className="w-full lg:w-1/2 bg-white flex flex-col justify-between p-6 sm:p-12 lg:p-16 overflow-y-auto">
         {/* Top Bar Navigation */}
         <div className="flex items-center justify-between mb-8">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-blue-600 transition group"
-          >
-            <div className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-blue-50 transition">
-              <ArrowLeft className="w-4 h-4 text-slate-600 group-hover:text-blue-600" />
-            </div>
-            <span>Volver al Portal Institucional</span>
-          </Link>
+          {view === "login" ? (
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-blue-600 transition group"
+            >
+              <div className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-blue-50 transition">
+                <ArrowLeft className="w-4 h-4 text-slate-600 group-hover:text-blue-600" />
+              </div>
+              <span>Volver al Portal Institucional</span>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setView("login");
+                setForgotSuccess(false);
+              }}
+              className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-blue-600 transition group cursor-pointer"
+            >
+              <div className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-blue-50 transition">
+                <ArrowLeft className="w-4 h-4 text-slate-600 group-hover:text-blue-600" />
+              </div>
+              <span>Volver a Iniciar Sesión</span>
+            </button>
+          )}
 
           <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-            Acceso Corporativo Seguro
+            {view === "login" ? "Acceso Corporativo Seguro" : "Recuperación de Acceso"}
           </span>
         </div>
 
-        {/* Main Form Container */}
-        <div className="max-w-md w-full mx-auto my-auto">
-          {/* Header */}
-          <div className="mb-6">
-            <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-slate-200 shadow-md shadow-blue-500/10 mb-4 flex items-center justify-center">
-              <img src={logoIcon} alt="TechAsset Logo" className="w-full h-full object-contain" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Bienvenido a Tech<span className="text-cyan-600">Asset</span>
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
-              Ingresá tus credenciales autorizadas de Innovatech Solutions S.A.C. para acceder al panel de control patrimonial.
-            </p>
-          </div>
-
-          <FormMessage type={messageType} message={message} />
-
-          {/* Form with WCAG 2.1 AA & ISO 40500 Compliance */}
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            {/* Input Correo */}
-            <div>
-              <label 
-                htmlFor="correo" 
-                className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5"
-              >
-                Correo Electrónico Institucional <span className="text-red-500">*</span>
-              </label>
-              <div className="relative rounded-xl shadow-xs">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <Mail className="w-4 h-4" />
-                </div>
-                <input
-                  id="correo"
-                  name="correo"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  aria-required="true"
-                  aria-invalid={!!errors.correo}
-                  aria-describedby={errors.correo ? "correo-error" : undefined}
-                  value={correo}
-                  onChange={(e) => {
-                    setCorreo(e.target.value);
-                    if (errors.correo) setErrors((prev) => ({ ...prev, correo: "" }));
-                  }}
-                  placeholder="ejemplo@innovatech.com"
-                  className={`w-full pl-10 pr-3 py-3 text-sm rounded-xl border outline-none transition focus:ring-2 bg-slate-50/80 focus:bg-white text-slate-900 font-medium ${
-                    errors.correo
-                      ? "border-red-500 focus:ring-red-100 bg-red-50/20"
-                      : "border-slate-300 focus:border-blue-600 focus:ring-blue-100"
-                  }`}
-                />
+        {view === "login" ? (
+          /* Main Form Container: LOGIN */
+          <div className="max-w-md w-full mx-auto my-auto">
+            {/* Header */}
+            <div className="mb-6">
+              <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-slate-200 shadow-md shadow-blue-500/10 mb-4 flex items-center justify-center">
+                <img src={logoIcon} alt="TechAsset Logo" className="w-full h-full object-contain" />
               </div>
-              {errors.correo && (
-                <p 
-                  id="correo-error" 
-                  role="alert" 
-                  className="text-red-600 text-xs mt-1.5 font-semibold flex items-center gap-1.5"
-                >
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{errors.correo}</span>
-                </p>
-              )}
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Bienvenido a Tech<span className="text-cyan-600">Asset</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+                Ingresá tus credenciales autorizadas de Innovatech Solutions S.A.C. para acceder al panel de control patrimonial.
+              </p>
             </div>
 
-            {/* Input Password */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
+            <FormMessage type={messageType} message={message} />
+
+            {/* Form with WCAG 2.1 AA & ISO 40500 Compliance */}
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              {/* Input Correo */}
+              <div>
                 <label 
-                  htmlFor="password" 
-                  className="block text-xs font-bold uppercase tracking-wider text-slate-700"
+                  htmlFor="correo" 
+                  className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5"
                 >
-                  Contraseña de Acceso <span className="text-red-500">*</span>
+                  Correo Electrónico Institucional <span className="text-red-500">*</span>
                 </label>
+                <div className="relative rounded-xl shadow-xs">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <input
+                    id="correo"
+                    name="correo"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    aria-required="true"
+                    aria-invalid={!!errors.correo}
+                    aria-describedby={errors.correo ? "correo-error" : undefined}
+                    value={correo}
+                    onChange={(e) => {
+                      setCorreo(e.target.value);
+                      if (errors.correo) setErrors((prev) => ({ ...prev, correo: "" }));
+                    }}
+                    placeholder="ejemplo@innovatech.com"
+                    className={`w-full pl-10 pr-3 py-3 text-sm rounded-xl border outline-none transition focus:ring-2 bg-slate-50/80 focus:bg-white text-slate-900 font-medium ${
+                      errors.correo
+                        ? "border-red-500 focus:ring-red-100 bg-red-50/20"
+                        : "border-slate-300 focus:border-blue-600 focus:ring-blue-100"
+                    }`}
+                  />
+                </div>
+                {errors.correo && (
+                  <p 
+                    id="correo-error" 
+                    role="alert" 
+                    className="text-red-600 text-xs mt-1.5 font-semibold flex items-center gap-1.5"
+                  >
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{errors.correo}</span>
+                  </p>
+                )}
+              </div>
+
+              {/* Input Password */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label 
+                    htmlFor="password" 
+                    className="block text-xs font-bold uppercase tracking-wider text-slate-700"
+                  >
+                    Contraseña de Acceso <span className="text-red-500">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleGoToForgot}
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition hover:underline cursor-pointer"
+                  >
+                    ¿Olvidó su contraseña?
+                  </button>
+                </div>
+
+                <div className="relative rounded-xl shadow-xs">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    required
+                    aria-required="true"
+                    aria-invalid={!!errors.password}
+                    aria-describedby={errors.password ? "password-error" : undefined}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
+                    }}
+                    placeholder="••••••••"
+                    className={`w-full pl-10 pr-11 py-3 text-sm rounded-xl border outline-none transition focus:ring-2 bg-slate-50/80 focus:bg-white text-slate-900 font-medium ${
+                      errors.password
+                        ? "border-red-500 focus:ring-red-100 bg-red-50/20"
+                        : "border-slate-300 focus:border-blue-600 focus:ring-blue-100"
+                    }`}
+                  />
+                  {/* Norman Signifier & Shneiderman Control: Eye icon button with proper aria-label */}
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña en texto claro"}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p 
+                    id="password-error" 
+                    role="alert" 
+                    className="text-red-600 text-xs mt-1.5 font-semibold flex items-center gap-1.5"
+                  >
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{errors.password}</span>
+                  </p>
+                )}
+              </div>
+
+              {/* Remember Me Checkbox */}
+              <div className="flex items-center justify-between pt-1">
+                <label htmlFor="recordar" className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    id="recordar"
+                    name="recordar"
+                    type="checkbox"
+                    checked={recordar}
+                    onChange={(e) => setRecordar(e.target.checked)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
+                  />
+                  <span className="text-xs text-slate-600 font-medium">
+                    Mantener sesión activa en este dispositivo
+                  </span>
+                </label>
+              </div>
+
+              {/* Submit Button with Affordance & Loading Spinner */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                aria-busy={isSubmitting}
+                className="w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-extrabold text-sm shadow-lg shadow-blue-600/25 hover:shadow-blue-600/35 transition-all flex items-center justify-center gap-2.5 transform active:scale-98 cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    <span>Verificando credenciales...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-4 h-4" />
+                    <span>Iniciar Sesión en TechAsset</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* QUICK DEMO PERSONA SELECTOR (Shneiderman Regla #8: Reduce Short-term Memory Load) */}
+            <div className="mt-8 pt-6 border-t border-slate-200">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-500" />
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-slate-800">
+                    Acceso Rápido por Perfil (1 Clic)
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                  Entorno Demo
+                </span>
+              </div>
+
+              <p className="text-xs text-slate-500 mb-3 leading-relaxed">
+                Hacé clic en cualquier persona para cargar sus credenciales institucionales de prueba al instante sin tener que memorizarlas:
+              </p>
+
+              <div className="space-y-2.5">
+                {personasDemo.map((persona) => {
+                  const isSelected = correo === persona.correo;
+                  return (
+                    <button
+                      key={persona.id}
+                      type="button"
+                      onClick={() => handleSelectDemo(persona)}
+                      className={`w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between cursor-pointer ${
+                        isSelected
+                          ? "bg-blue-50/80 border-blue-400 ring-2 ring-blue-400/20 shadow-sm"
+                          : "bg-slate-50 hover:bg-slate-100/80 border-slate-200"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={persona.foto} 
+                          alt={persona.nombre} 
+                          className="w-9 h-9 rounded-full object-cover border border-slate-300 shrink-0"
+                        />
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs font-bold text-slate-900 leading-none">{persona.nombre}</p>
+                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${persona.badgeColor}`}>
+                              {persona.id === "admin" ? "Admin" : persona.id === "soporte" ? "Soporte" : "Usuario"}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 mt-1 leading-none">{persona.rol} &bull; {persona.correo}</p>
+                        </div>
+                      </div>
+
+                      {isSelected && (
+                        <div className="p-1 rounded-full bg-blue-600 text-white shrink-0 ml-2">
+                          <Check className="w-3.5 h-3.5" />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Main Form Container: VISTA DE OLVIDO SU CONTRASEÑA */
+          <div className="max-w-md w-full mx-auto my-auto">
+            {/* Header */}
+            <div className="mb-6">
+              <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-slate-200 shadow-md shadow-blue-500/10 mb-4 flex items-center justify-center">
+                <img src={logoIcon} alt="TechAsset Logo" className="w-full h-full object-contain" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Recuperar <span className="text-cyan-600">Contraseña</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+                Ingresá tu correo electrónico institucional para recibir un enlace seguro de restablecimiento de contraseña.
+              </p>
+            </div>
+
+            {!forgotSuccess ? (
+              <form onSubmit={handleForgotSubmit} className="space-y-4" noValidate>
+                {/* Input Correo para Recuperación */}
+                <div>
+                  <label 
+                    htmlFor="forgot-correo" 
+                    className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5"
+                  >
+                    Correo Electrónico Institucional <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative rounded-xl shadow-xs">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <input
+                      id="forgot-correo"
+                      name="forgotEmail"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      aria-required="true"
+                      aria-invalid={!!forgotError}
+                      aria-describedby={forgotError ? "forgot-correo-error" : undefined}
+                      value={forgotEmail}
+                      onChange={(e) => {
+                        setForgotEmail(e.target.value);
+                        if (forgotError) setForgotError("");
+                      }}
+                      placeholder="ejemplo@innovatech.com"
+                      className={`w-full pl-10 pr-3 py-3 text-sm rounded-xl border outline-none transition focus:ring-2 bg-slate-50/80 focus:bg-white text-slate-900 font-medium ${
+                        forgotError
+                          ? "border-red-500 focus:ring-red-100 bg-red-50/20"
+                          : "border-slate-300 focus:border-blue-600 focus:ring-blue-100"
+                      }`}
+                    />
+                  </div>
+                  {forgotError && (
+                    <p 
+                      id="forgot-correo-error" 
+                      role="alert" 
+                      className="text-red-600 text-xs mt-1.5 font-semibold flex items-center gap-1.5"
+                    >
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{forgotError}</span>
+                    </p>
+                  )}
+                </div>
+
+                {/* Botón de Envío */}
+                <button
+                  type="submit"
+                  disabled={forgotSubmitting}
+                  aria-busy={forgotSubmitting}
+                  className="w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-extrabold text-sm shadow-lg shadow-blue-600/25 hover:shadow-blue-600/35 transition-all flex items-center justify-center gap-2.5 cursor-pointer transform active:scale-98"
+                >
+                  {forgotSubmitting ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                      <span>Verificando cuenta institucional...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Enviar Instrucciones de Recuperación</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+
+                {/* Botón Volver al Login */}
                 <button
                   type="button"
                   onClick={() => {
-                    setMessage("Para fines de evaluación académica, podés hacer clic en cualquiera de los 3 perfiles demo de abajo para cargar credenciales verificadas.");
-                    setMessageType("info");
+                    setView("login");
+                    setMessage("");
                   }}
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition hover:underline"
+                  className="w-full py-3 px-5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer mt-2"
                 >
-                  ¿Ayuda con la contraseña?
+                  <ArrowLeft className="w-4 h-4 text-slate-500" />
+                  <span>Volver al Inicio de Sesión</span>
                 </button>
-              </div>
 
-              <div className="relative rounded-xl shadow-xs">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <Lock className="w-4 h-4" />
+                {/* Nota de Seguridad Institucional */}
+                <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1.5">
+                  <div className="flex items-center gap-2 font-bold text-slate-800">
+                    <ShieldCheck className="w-4 h-4 text-blue-600" />
+                    <span>Política de Seguridad Institucional</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    Por protocolos de seguridad corporativa, los enlaces de recuperación expiran a los 15 minutos de su emisión. Si no tenés acceso a tu casilla oficial, contactá al Administrador de Sistemas TI.
+                  </p>
                 </div>
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  required
-                  aria-required="true"
-                  aria-invalid={!!errors.password}
-                  aria-describedby={errors.password ? "password-error" : undefined}
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
-                  }}
-                  placeholder="••••••••"
-                  className={`w-full pl-10 pr-11 py-3 text-sm rounded-xl border outline-none transition focus:ring-2 bg-slate-50/80 focus:bg-white text-slate-900 font-medium ${
-                    errors.password
-                      ? "border-red-500 focus:ring-red-100 bg-red-50/20"
-                      : "border-slate-300 focus:border-blue-600 focus:ring-blue-100"
-                  }`}
-                />
-                {/* Norman Signifier & Shneiderman Control: Eye icon button with proper aria-label */}
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña en texto claro"}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-              {errors.password && (
-                <p 
-                  id="password-error" 
-                  role="alert" 
-                  className="text-red-600 text-xs mt-1.5 font-semibold flex items-center gap-1.5"
-                >
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{errors.password}</span>
-                </p>
-              )}
-            </div>
+              </form>
+            ) : (
+              /* Pantalla de Confirmación de Envío */
+              <div className="space-y-6">
+                <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-base font-bold text-emerald-950">
+                    ¡Instrucciones de Restablecimiento Enviadas!
+                  </h3>
+                  <p className="text-xs text-emerald-800 leading-relaxed">
+                    Si el correo ingresado corresponde a un usuario activo en el sistema, recibirás en breve un enlace seguro con instrucciones detalladas.
+                  </p>
+                  <div className="inline-block px-3 py-1 bg-white rounded-lg border border-emerald-200 font-mono text-xs font-bold text-emerald-900">
+                    {forgotEmail}
+                  </div>
+                  <p className="text-[11px] text-emerald-700">
+                    Revisá tu bandeja de entrada o la carpeta de correo no deseado. El enlace expirará automáticamente en 15 minutos.
+                  </p>
+                </div>
 
-            {/* Remember Me Checkbox */}
-            <div className="flex items-center justify-between pt-1">
-              <label htmlFor="recordar" className="flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  id="recordar"
-                  name="recordar"
-                  type="checkbox"
-                  checked={recordar}
-                  onChange={(e) => setRecordar(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
-                />
-                <span className="text-xs text-slate-600 font-medium">
-                  Mantener sesión activa en este dispositivo
-                </span>
-              </label>
-            </div>
+                {/* Tip de Demostración */}
+                <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-800 space-y-1">
+                  <div className="flex items-center gap-1.5 font-bold">
+                    <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Tip del Entorno Demo</span>
+                  </div>
+                  <p className="text-[11px] text-blue-700 leading-relaxed">
+                    Recordá que para las cuentas de prueba institucionales podés ingresar de inmediato utilizando la clave estándar: <code className="font-mono font-bold bg-blue-100 px-1.5 py-0.5 rounded text-blue-900">Innovatech2026*</code>.
+                  </p>
+                </div>
 
-            {/* Submit Button with Affordance & Loading Spinner */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              aria-busy={isSubmitting}
-              className="w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-extrabold text-sm shadow-lg shadow-blue-600/25 hover:shadow-blue-600/35 transition-all flex items-center justify-center gap-2.5 transform active:scale-98"
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  <span>Verificando credenciales...</span>
-                </>
-              ) : (
-                <>
-                  <LogIn className="w-4 h-4" />
-                  <span>Iniciar Sesión en TechAsset</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* QUICK DEMO PERSONA SELECTOR (Shneiderman Regla #8: Reduce Short-term Memory Load) */}
-          <div className="mt-8 pt-6 border-t border-slate-200">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                <span className="text-xs font-extrabold uppercase tracking-wider text-slate-800">
-                  Acceso Rápido por Perfil (1 Clic)
-                </span>
-              </div>
-              <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                Entorno Demo
-              </span>
-            </div>
-
-            <p className="text-xs text-slate-500 mb-3 leading-relaxed">
-              Hacé clic en cualquier persona para cargar sus credenciales institucionales de prueba al instante sin tener que memorizarlas:
-            </p>
-
-            <div className="space-y-2.5">
-              {personasDemo.map((persona) => {
-                const isSelected = correo === persona.correo;
-                return (
+                <div className="space-y-2.5">
                   <button
-                    key={persona.id}
                     type="button"
-                    onClick={() => handleSelectDemo(persona)}
-                    className={`w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between ${
-                      isSelected
-                        ? "bg-blue-50/80 border-blue-400 ring-2 ring-blue-400/20 shadow-sm"
-                        : "bg-slate-50 hover:bg-slate-100/80 border-slate-200"
-                    }`}
+                    onClick={() => {
+                      setCorreo(forgotEmail);
+                      setView("login");
+                      setForgotSuccess(false);
+                    }}
+                    className="w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <div className="flex items-center gap-3">
-                      <img 
-                        src={persona.foto} 
-                        alt={persona.nombre} 
-                        className="w-9 h-9 rounded-full object-cover border border-slate-300 shrink-0"
-                      />
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs font-bold text-slate-900 leading-none">{persona.nombre}</p>
-                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${persona.badgeColor}`}>
-                            {persona.id === "admin" ? "Admin" : persona.id === "soporte" ? "Soporte" : "Usuario"}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-500 mt-1 leading-none">{persona.rol} &bull; {persona.correo}</p>
-                      </div>
-                    </div>
-
-                    {isSelected && (
-                      <div className="p-1 rounded-full bg-blue-600 text-white shrink-0 ml-2">
-                        <Check className="w-3.5 h-3.5" />
-                      </div>
-                    )}
+                    <LogIn className="w-4 h-4" />
+                    <span>Regresar a Iniciar Sesión</span>
                   </button>
-                );
-              })}
-            </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setForgotSuccess(false)}
+                    className="w-full py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition cursor-pointer"
+                  >
+                    Intentar con otro correo electrónico
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Footer info */}
         <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">

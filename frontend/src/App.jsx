@@ -19,6 +19,8 @@ export default function App() {
           {/* Public Landing & Login Pages */}
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/recuperar-password" element={<Login initialView="forgot" />} />
+          <Route path="/olvido-password" element={<Login initialView="forgot" />} />
 
           {/* Authenticated Application Modules wrapped in MainLayout */}
           <Route

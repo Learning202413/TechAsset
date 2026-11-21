@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import logoIcon from "../assets/logo-icon.png";
 import { 
-  Layers, 
   LogIn, 
   ArrowRight, 
   Laptop, 
@@ -18,50 +17,51 @@ import {
   ShieldCheck, 
   ArrowLeftRight, 
   BarChart3, 
-  ExternalLink,
-  Check,
-  ChevronRight,
-  Clock,
-  Sparkles
+  Check, 
+  Sparkles,
+  Building2,
+  Wrench,
+  Search,
+  Shield
 } from "lucide-react";
 
 export default function Landing() {
-  const [selectedActor, setSelectedActor] = useState("admin");
+  const [selectedRole, setSelectedRole] = useState("admin");
 
-  // Actores del Sistema (Sección 5 del Caso Práctico Integrador)
-  const actores = {
+  // Perfiles de Usuario y Beneficios de Negocio (Enfoque de Valor - Nielsen / Norman)
+  const perfiles = {
     admin: {
-      titulo: "Administrador",
-      responsabilidad: "Responsable de administrar la información del sistema.",
-      funciones: [
-        "Gestionar usuarios y cuentas de acceso",
-        "Administrar el catálogo de equipos tecnológicos",
-        "Consultar reportes e indicadores de gestión",
-        "Supervisar préstamos y auditoría institucional"
+      titulo: "Directivos y Administradores TI",
+      descripcion: "Visibilidad ejecutiva, auditoría patrimonial y control de accesos para la toma estratégica de decisiones.",
+      beneficios: [
+        "Dashboard ejecutivo con indicadores de demanda y rotación de activos en tiempo real",
+        "Supervisión integral de custodias y cumplimiento formal de devoluciones",
+        "Gestión centralizada de cuentas de usuario y control de accesos institucionales",
+        "Trazabilidad histórica blindada contra pérdidas patrimoniales y auditorías externas"
       ]
     },
     tecnologia: {
-      titulo: "Responsable de Tecnología",
-      responsabilidad: "Responsable de la asignación y control de los equipos tecnológicos.",
-      funciones: [
-        "Registrar e inventariar equipos tecnológicos",
-        "Aprobar y despachar préstamos de equipos",
-        "Registrar devoluciones con inspección física",
-        "Consultar la disponibilidad de inventario en tiempo real"
+      titulo: "Gestores de Almacén y Soporte TI",
+      descripcion: "Operatividad ágil para catalogar inventario, despachar préstamos y validar retornos físicos sin fricción.",
+      beneficios: [
+        "Registro inmediato de activos con validación automática de códigos patrimoniales",
+        "Despacho y asignación de custodias en segundos con comprobación de disponibilidad",
+        "Recepción formal de equipos con inspección física y registro de observaciones",
+        "Control dinámico del ciclo de vida operativo (Disponible, Prestado, Mantenimiento)"
       ]
     },
     colaborador: {
-      titulo: "Colaborador",
-      responsabilidad: "Usuario que solicita equipos tecnológicos para sus actividades.",
-      funciones: [
-        "Solicitar préstamos de equipos para sus actividades",
-        "Consultar su historial de préstamos",
-        "Consultar la disponibilidad de equipos tecnológicos"
+      titulo: "Colaboradores de Innovatech Solutions",
+      descripcion: "Transparencia y agilidad para acceder al equipamiento tecnológico necesario para sus proyectos.",
+      beneficios: [
+        "Consulta en tiempo real de la disponibilidad de equipos en el catálogo institucional",
+        "Historial transparente y detallado de los activos asignados bajo su responsabilidad",
+        "Proceso formal, ágil y seguro que respalda la entrega y devolución del equipamiento"
       ]
     }
   };
 
-  // Familias de Activos Tecnológicos (Sección 1 del PDF)
+  // Familias de Activos Tecnológicos Monitoreados
   const activos = [
     { nombre: "Laptops", icono: Laptop },
     { nombre: "Computadoras de escritorio", icono: Cpu },
@@ -72,16 +72,33 @@ export default function Landing() {
     { nombre: "Equipos de red", icono: Network }
   ];
 
-  // Inconvenientes Actuales (Sección 1 del PDF)
-  const inconvenientes = [
-    "Pérdida de información en registros no centralizados.",
-    "Duplicidad de registros en hojas de cálculo.",
-    "Falta de control de préstamos y devoluciones.",
-    "Desconocimiento de la ubicación física de los equipos.",
-    "Dificultad para conocer la disponibilidad real de activos.",
-    "Ausencia de indicadores para la toma de decisiones.",
-    "Procesos lentos para la asignación y retorno de equipos."
+  // Pilares de la Solución vs Limitaciones de Hojas de Cálculo
+  const soluciones = [
+    {
+      problema: "Registros dispersos en hojas de cálculo propensas a errores",
+      solucion: "Base de datos centralizada con integridad referencial e historial inmutable.",
+      icono: DatabaseIcon
+    },
+    {
+      problema: "Desconocimiento de la ubicación física y responsable del equipo",
+      solucion: "Trazabilidad de custodia 100% identificada por colaborador y área funcional.",
+      icono: Search
+    },
+    {
+      problema: "Falta de inspección formal y daño no registrado en retornos",
+      solucion: "Registro formal de devolución con observaciones de estado y condición física.",
+      icono: Wrench
+    },
+    {
+      problema: "Pérdida accidental o eliminación no autorizada de activos",
+      solucion: "Reglas estrictas de auditoría que impiden eliminar equipos con préstamos previos.",
+      icono: Shield
+    }
   ];
+
+  function DatabaseIcon(props) {
+    return <Building2 {...props} />;
+  }
 
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
@@ -107,14 +124,14 @@ export default function Landing() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-            <a href="#problematica" className="hover:text-blue-600 transition">Presentación</a>
-            <a href="#actores" className="hover:text-blue-600 transition">Actores</a>
-            <a href="#alcance" className="hover:text-blue-600 transition">Alcance Funcional</a>
-            <a href="#dashboard" className="hover:text-blue-600 transition">Dashboard</a>
+            <a href="#solucion" className="hover:text-blue-600 transition">Solución</a>
+            <a href="#capacidades" className="hover:text-blue-600 transition">Capacidades</a>
+            <a href="#perfiles" className="hover:text-blue-600 transition">Perfiles</a>
+            <a href="#indicadores" className="hover:text-blue-600 transition">Indicadores</a>
           </nav>
 
           <Link to="/login">
-            <button className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm hover:shadow transition-all inline-flex items-center gap-2">
+            <button className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm hover:shadow transition-all inline-flex items-center gap-2 cursor-pointer">
               <LogIn className="w-4 h-4" />
               <span>Acceder al Sistema</span>
             </button>
@@ -122,28 +139,27 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* 2. PRESENTACIÓN INSTITUCIONAL & PROPÓSITO */}
+      {/* 2. HERO SECTION ORIENTADA A PROPUESTA DE VALOR */}
       <main className="flex-1">
         <section className="pt-16 pb-14 sm:pt-20 sm:pb-16 bg-gradient-to-b from-slate-50 via-white to-white border-b border-slate-200/70">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-6">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Plataforma Institucional &bull; Gestión y Trazabilidad de TI</span>
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <span>Plataforma Corporativa de Gestión y Trazabilidad de TI</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl font-black text-slate-950 tracking-tight leading-[1.15]">
-              TechAsset: Sistema de Gestión de Inventario y Préstamo de{" "}
-              <span className="text-blue-600">Equipos Tecnológicos</span>
+              Control patrimonial inteligente y trazabilidad en tiempo real para{" "}
+              <span className="text-blue-600">activos tecnológicos</span>
             </h1>
 
             <p className="mt-6 text-base sm:text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
-              La empresa <strong>Innovatech Solutions S.A.C.</strong> es una organización dedicada al desarrollo de soluciones tecnológicas con más de 500 colaboradores en diversas áreas funcionales. 
-              TechAsset nace por iniciativa de la Gerencia de Tecnología para administrar el inventario tecnológico institucional y controlar el préstamo de equipos.
+              Centralizá el parque de equipos de <strong>Innovatech Solutions S.A.C.</strong>, gestioná asignaciones en segundos y garantizá la custodia formal de hardware con una plataforma moderna, ágil y auditable.
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/login" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-600/25 hover:shadow-blue-600/35 transition-all inline-flex items-center justify-center gap-2.5">
+                <button className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-600/25 hover:shadow-blue-600/35 transition-all inline-flex items-center justify-center gap-2.5 cursor-pointer">
                   <LogIn className="w-4 h-4" />
                   <span>Acceder al Sistema (Login)</span>
                   <ArrowRight className="w-4 h-4" />
@@ -151,20 +167,20 @@ export default function Landing() {
               </Link>
 
               <Link to="/dashboard" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm border border-slate-300 shadow-2xs transition inline-flex items-center justify-center gap-2">
+                <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm border border-slate-300 shadow-2xs transition inline-flex items-center justify-center gap-2 cursor-pointer">
                   <BarChart3 className="w-4 h-4 text-slate-500" />
-                  <span>Ver Dashboard Operativo</span>
+                  <span>Ver Panel Ejecutivo</span>
                 </button>
               </Link>
             </div>
           </div>
         </section>
 
-        {/* 3. ACTIVOS TECNOLÓGICOS DEL CASO PRÁCTICO */}
+        {/* 3. PARQUE TECNOLÓGICO CENTRALIZADO */}
         <section className="py-12 bg-white border-b border-slate-200/80">
           <div className="max-w-5xl mx-auto px-6">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-500 text-center mb-6">
-              Activos Tecnológicos de Innovatech Solutions S.A.C.
+              Control Unificado para Todo el Equipamiento Tecnológico Institucional
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
               {activos.map((act) => {
@@ -182,113 +198,119 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* 4. PROBLEMÁTICA ACTUAL VS PROPÓSITO DE LA SOLUCIÓN */}
-        <section id="problematica" className="py-16 bg-slate-50 border-b border-slate-200">
+        {/* 4. DEL CAOS MANUAL A LA CERTEZA PATRIMONIAL */}
+        <section id="solucion" className="py-16 bg-slate-50 border-b border-slate-200">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center max-w-2xl mx-auto mb-12">
-              <span className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 px-3 py-1 rounded-full border border-red-200">
-                Situación Actual
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+                Transformación Operativa
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
-                Inconvenientes del Registro Manual y Hojas de Cálculo
+                Del Descontrol Manual a la Certeza Patrimonial
               </h2>
               <p className="text-slate-600 text-sm mt-2">
-                Dificultades operativas identificadas que motivaron el desarrollo de TechAsset.
+                Descubrí cómo TechAsset reemplaza las hojas de cálculo dispersas por un flujo operativo automatizado y trazable.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {inconvenientes.map((inc, index) => (
-                <div key={index} className="p-4 rounded-xl bg-white border border-slate-200 flex items-start gap-3 shadow-2xs">
-                  <div className="p-1 rounded bg-red-50 text-red-600 mt-0.5 shrink-0">
-                    <AlertTriangle className="w-4 h-4" />
+              {soluciones.map((item, index) => {
+                const IconComp = item.icono;
+                return (
+                  <div key={index} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
+                        <IconComp className="w-5 h-5" />
+                      </div>
+                      <div className="text-xs text-red-600 font-semibold line-through">
+                        {item.problema}
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2.5 pt-1 text-slate-800 text-xs sm:text-sm font-medium">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <span>{item.solucion}</span>
+                    </div>
                   </div>
-                  <span className="text-xs font-medium text-slate-700 leading-relaxed">
-                    {inc}
-                  </span>
-                </div>
-              ))}
-
-              <div className="p-4 rounded-xl bg-blue-600 text-white flex items-start gap-3 shadow-sm md:col-span-2">
-                <div className="p-1 rounded bg-blue-700 text-white mt-0.5 shrink-0">
-                  <CheckCircle2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-blue-200">Propósito de TechAsset</h4>
-                  <p className="text-xs text-blue-50 mt-1 leading-relaxed">
-                    Administrar el inventario tecnológico institucional y controlar el préstamo de equipos a los colaboradores de Innovatech Solutions S.A.C., garantizando trazabilidad y soporte a la toma de decisiones.
-                  </p>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* 5. ACTORES DEL SISTEMA (SECCIÓN 5 DEL PDF) */}
-        <section id="actores" className="py-16 bg-white border-b border-slate-200">
+        {/* 5. EXPERIENCIA ADAPTADA POR PERFIL (REEMPLAZA ACTORES Y ROLES ACADÉMICOS) */}
+        <section id="perfiles" className="py-16 bg-white border-b border-slate-200">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center max-w-2xl mx-auto mb-10">
               <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-                Actores del Sistema
+                Experiencia Centrada en las Personas
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
-                Roles y Responsabilidades Institucionales
+                Diseñado a la Medida de Cada Rol Institucional
               </h2>
+              <p className="text-slate-600 text-sm mt-2">
+                Herramientas intuitivas concebidas para optimizar el trabajo diario en cada área de Innovatech Solutions.
+              </p>
             </div>
 
-            {/* Selector de Actores (DCU - ISO 9241-210) */}
+            {/* Selector de Perfil */}
             <div className="flex justify-center mb-8">
               <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200">
                 <button
-                  onClick={() => setSelectedActor("admin")}
-                  className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${
-                    selectedActor === "admin"
+                  type="button"
+                  onClick={() => setSelectedRole("admin")}
+                  className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                    selectedRole === "admin"
                       ? "bg-white text-blue-600 shadow-xs"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  Administrador
+                  Directivos TI
                 </button>
                 <button
-                  onClick={() => setSelectedActor("tecnologia")}
-                  className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${
-                    selectedActor === "tecnologia"
+                  type="button"
+                  onClick={() => setSelectedRole("tecnologia")}
+                  className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                    selectedRole === "tecnologia"
                       ? "bg-white text-blue-600 shadow-xs"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  Responsable de Tecnología
+                  Gestión y Almacén
                 </button>
                 <button
-                  onClick={() => setSelectedActor("colaborador")}
-                  className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${
-                    selectedActor === "colaborador"
+                  type="button"
+                  onClick={() => setSelectedRole("colaborador")}
+                  className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                    selectedRole === "colaborador"
                       ? "bg-white text-blue-600 shadow-xs"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  Colaborador
+                  Colaboradores
                 </button>
               </div>
             </div>
 
-            {/* Ficha del Actor Seleccionado */}
-            <div className="max-w-2xl mx-auto p-6 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs">
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
-                {actores[selectedActor].titulo}
-              </h3>
-              <p className="text-xs text-blue-600 font-medium mb-4">
-                {actores[selectedActor].responsabilidad}
+            {/* Ficha de Valor del Perfil Seleccionado */}
+            <div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs">
+              <div className="flex items-center gap-2 mb-2">
+                <ShieldCheck className="w-5 h-5 text-blue-600" />
+                <h3 className="text-lg font-bold text-slate-900">
+                  {perfiles[selectedRole].titulo}
+                </h3>
+              </div>
+              <p className="text-xs text-slate-600 font-medium mb-6 leading-relaxed">
+                {perfiles[selectedRole].descripcion}
               </p>
 
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">
-                Funciones Asignadas:
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+                Beneficios Operativos Destacados:
               </h4>
-              <ul className="space-y-2">
-                {actores[selectedActor].funciones.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-slate-700">
-                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>{f}</span>
+              <ul className="space-y-3">
+                {perfiles[selectedRole].beneficios.map((b, i) => (
+                  <li key={i} className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span className="leading-snug">{b}</span>
                   </li>
                 ))}
               </ul>
@@ -296,150 +318,133 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* 6. ALCANCE FUNCIONAL (SECCIÓN 4 DEL PDF) */}
-        <section id="alcance" className="py-16 bg-slate-50 border-b border-slate-200">
+        {/* 6. CAPACIDADES CENTRALES DE LA PLATAFORMA (REEMPLAZA LISTAS CRUD DE ALCANCE) */}
+        <section id="capacidades" className="py-16 bg-slate-50 border-b border-slate-200">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center max-w-2xl mx-auto mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-                Alcance Funcional
+                Capacidades de la Plataforma
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
-                Módulos del Sistema TechAsset
+                Soluciones Integrales para la Gestión de Hardware
               </h2>
+              <p className="text-slate-600 text-sm mt-2">
+                Un ecosistema robusto diseñado para responder a las exigencias operativas y de seguridad institucional.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {/* Módulo 1 */}
-              <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-2xs">
-                <div className="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold mb-3">
-                  <Users className="w-4 h-4" />
+              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-blue-300 transition">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold mb-3 border border-blue-100">
+                  <Laptop className="w-5 h-5" />
                 </div>
-                <h4 className="text-sm font-bold text-slate-900 mb-2">Gestión de Usuarios</h4>
-                <ul className="text-xs text-slate-600 space-y-1.5 font-medium">
-                  <li>&bull; Registrar usuarios</li>
-                  <li>&bull; Modificar usuarios</li>
-                  <li>&bull; Consultar usuarios</li>
-                  <li>&bull; Deshabilitar usuarios</li>
-                </ul>
+                <h4 className="text-sm font-bold text-slate-900 mb-2">Inventario de Equipos</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Catálogo centralizado con códigos patrimoniales únicos, filtrado multidimensional por categoría y control estricto de disponibilidad operativa.
+                </p>
               </div>
 
               {/* Módulo 2 */}
-              <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-2xs">
-                <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold mb-3">
-                  <Laptop className="w-4 h-4" />
+              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-blue-300 transition">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold mb-3 border border-indigo-100">
+                  <ArrowLeftRight className="w-5 h-5" />
                 </div>
-                <h4 className="text-sm font-bold text-slate-900 mb-2">Gestión de Equipos</h4>
-                <ul className="text-xs text-slate-600 space-y-1.5 font-medium">
-                  <li>&bull; Registrar equipos tecnológicos</li>
-                  <li>&bull; Modificar equipos</li>
-                  <li>&bull; Consultar inventario</li>
-                  <li>&bull; Actualizar estado del equipo</li>
-                </ul>
+                <h4 className="text-sm font-bold text-slate-900 mb-2">Control de Préstamos</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Trazabilidad de custodia punta a punta: despacho en segundos, registro formal de devoluciones e inspección física obligatoria.
+                </p>
               </div>
 
               {/* Módulo 3 */}
-              <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-2xs">
-                <div className="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center font-bold mb-3">
-                  <ArrowLeftRight className="w-4 h-4" />
+              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-blue-300 transition">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold mb-3 border border-purple-100">
+                  <Users className="w-5 h-5" />
                 </div>
-                <h4 className="text-sm font-bold text-slate-900 mb-2">Gestión de Préstamos</h4>
-                <ul className="text-xs text-slate-600 space-y-1.5 font-medium">
-                  <li>&bull; Registrar préstamos</li>
-                  <li>&bull; Registrar devoluciones</li>
-                  <li>&bull; Consultar historial</li>
-                  <li>&bull; Consultar préstamos activos</li>
-                </ul>
+                <h4 className="text-sm font-bold text-slate-900 mb-2">Colaboradores y Usuarios</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Directorio corporativo vinculado a áreas funcionales, facilitando la auditoría de asignaciones y la gestión segura de accesos.
+                </p>
               </div>
 
               {/* Módulo 4 */}
-              <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-2xs">
-                <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold mb-3">
-                  <BarChart3 className="w-4 h-4" />
+              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-blue-300 transition">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold mb-3 border border-emerald-100">
+                  <BarChart3 className="w-5 h-5" />
                 </div>
-                <h4 className="text-sm font-bold text-slate-900 mb-2">Gestión de Reportes</h4>
-                <ul className="text-xs text-slate-600 space-y-1.5 font-medium">
-                  <li>&bull; Visualizar indicadores</li>
-                  <li>&bull; Consultar equipos disponibles</li>
-                  <li>&bull; Consultar equipos prestados</li>
-                  <li>&bull; Préstamos por área / Historial</li>
-                </ul>
+                <h4 className="text-sm font-bold text-slate-900 mb-2">Métricas y Decisiones</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Indicadores ejecutivos de rotación de hardware, análisis de demanda departamental acumulada y estado de capacidad en tiempo real.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 7. DASHBOARD MÍNIMO REQUERIDO (SECCIÓN 10 DEL PDF) */}
-        <section id="dashboard" className="py-16 bg-white border-b border-slate-200">
+        {/* 7. INDICADORES Y CERTEZA OPERATIVA */}
+        <section id="indicadores" className="py-16 bg-white border-b border-slate-200">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center max-w-2xl mx-auto mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                Panel de Indicadores Centrales
+                Gobernanza Tecnológica
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
-                Indicadores Clave del Sistema
+                Impacto Operativo Comprobado
               </h2>
+              <p className="text-slate-600 text-sm mt-2">
+                Métricas de valor que garantizan la eficiencia del departamento de TI de Innovatech Solutions.
+              </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-[11px] font-bold uppercase text-slate-500">Total de equipos</p>
-                <p className="text-2xl font-black text-slate-900 mt-1">120</p>
-                <p className="text-[11px] text-slate-500 mt-1">Equipos registrados en el sistema</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+                <p className="text-3xl font-black text-blue-600">100%</p>
+                <p className="text-xs font-bold text-slate-800 mt-1">Trazabilidad de Custodia</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">Sin activos sin responsable</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-[11px] font-bold uppercase text-slate-500">Equipos disponibles</p>
-                <p className="text-2xl font-black text-emerald-600 mt-1">85</p>
-                <p className="text-[11px] text-slate-500 mt-1">Equipos listos para préstamo</p>
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+                <p className="text-3xl font-black text-emerald-600">&lt; 30s</p>
+                <p className="text-xs font-bold text-slate-800 mt-1">Tiempo de Asignación</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">Despacho ágil en almacén</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-[11px] font-bold uppercase text-slate-500">Equipos prestados</p>
-                <p className="text-2xl font-black text-blue-600 mt-1">28</p>
-                <p className="text-[11px] text-slate-500 mt-1">Equipos actualmente asignados</p>
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+                <p className="text-3xl font-black text-indigo-600">0</p>
+                <p className="text-xs font-bold text-slate-800 mt-1">Registros Duplicados</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">Base relacional centralizada</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-[11px] font-bold uppercase text-slate-500">Equipos en mantenimiento</p>
-                <p className="text-2xl font-black text-amber-600 mt-1">7</p>
-                <p className="text-[11px] text-slate-500 mt-1">Equipos fuera de servicio</p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-[11px] font-bold uppercase text-slate-500">Total de préstamos</p>
-                <p className="text-2xl font-black text-purple-600 mt-1">42</p>
-                <p className="text-[11px] text-slate-500 mt-1">Cantidad de préstamos registrados</p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-[11px] font-bold uppercase text-slate-500">Área con mayor uso</p>
-                <p className="text-lg font-black text-indigo-600 mt-1">Desarrollo TI</p>
-                <p className="text-[11px] text-slate-500 mt-1">Área que registra más préstamos</p>
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+                <p className="text-3xl font-black text-amber-600">100%</p>
+                <p className="text-xs font-bold text-slate-800 mt-1">Auditoría Garantizada</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">Inspección física en retornos</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 8. LLAMADO FINAL A INICIAR SESIÓN */}
-        <section className="py-14 bg-blue-600 text-white text-center">
+        {/* 8. LLAMADO FINAL A LA ACCIÓN */}
+        <section className="py-16 bg-blue-600 text-white text-center">
           <div className="max-w-xl mx-auto px-6">
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-2">
-              Acceso Institucional a TechAsset
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-3">
+              Comenzá a gestionar los activos de Innovatech Solutions hoy mismo
             </h2>
-            <p className="text-blue-100 text-xs sm:text-sm mb-6">
-              Plataforma para Innovatech Solutions S.A.C. &bull; Construcción de Software 2026.
+            <p className="text-blue-100 text-xs sm:text-sm mb-8 leading-relaxed">
+              Plataforma institucional de control patrimonial, préstamos de hardware y toma de decisiones.
             </p>
             <Link to="/login">
-              <button className="px-7 py-3 rounded-xl bg-white text-blue-600 hover:bg-slate-50 font-bold text-sm shadow-md transition-all inline-flex items-center gap-2">
+              <button className="px-8 py-3.5 rounded-xl bg-white text-blue-600 hover:bg-slate-50 font-bold text-sm shadow-lg shadow-blue-900/30 transition-all inline-flex items-center gap-2.5 cursor-pointer">
                 <LogIn className="w-4 h-4" />
                 <span>Ingresar al Sistema (Login)</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
           </div>
         </section>
       </main>
 
-      {/* 9. PIE DE PÁGINA */}
+      {/* 9. PIE DE PÁGINA CORPORATIVO */}
       <footer className="bg-white border-t border-slate-200 py-8 px-6 text-xs text-slate-500">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">

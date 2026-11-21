@@ -426,7 +426,7 @@ export default function Login() {
                 </span>
               </div>
               <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                Docente / Evaluación
+                Entorno Demo
               </span>
             </div>
 

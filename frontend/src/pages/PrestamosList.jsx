@@ -368,26 +368,37 @@ export default function PrestamosList() {
               ))}
             </div>
 
-            {/* VISTA DESKTOP / TABLET: Tabla Natural Expandida (Pantallas md+) */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left text-xs" aria-label="Tabla de préstamos de equipos">
+            {/* VISTA ESCRITORIO / TABLET: Tabla Proporcional Balanceada (Pantallas md+) */}
+            <div className="hidden md:block overflow-hidden">
+              <table className="w-full table-fixed text-left text-xs" aria-label="Tabla de préstamos de equipos">
+                <colgroup>
+                  <col className="w-[23%]" />
+                  <col className="w-[23%]" />
+                  <col className="w-[11%]" />
+                  <col className="w-[11%]" />
+                  <col className="w-[14%]" />
+                  <col className="w-[9%]" />
+                  <col className="w-[9%]" />
+                </colgroup>
                 <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                   <tr>
-                    <th scope="col" className="px-4 py-3.5">Equipo Asignado</th>
-                    <th scope="col" className="px-4 py-3.5">Colaborador / Área</th>
-                    <th scope="col" className="px-3 py-3.5 whitespace-nowrap">Fecha Salida</th>
-                    <th scope="col" className="px-3 py-3.5 whitespace-nowrap">Fecha Devolución</th>
-                    <th scope="col" className="px-4 py-3.5">Observaciones</th>
-                    <th scope="col" className="px-3 py-3.5 text-center whitespace-nowrap">Estado</th>
-                    <th scope="col" className="px-4 py-3.5 text-right whitespace-nowrap">Acción</th>
+                    <th scope="col" className="px-3.5 py-3.5">Equipo Asignado</th>
+                    <th scope="col" className="px-3.5 py-3.5">Colaborador / Área</th>
+                    <th scope="col" className="px-2 py-3.5 whitespace-nowrap">Fecha Salida</th>
+                    <th scope="col" className="px-2 py-3.5 whitespace-nowrap">Fecha Devolución</th>
+                    <th scope="col" className="px-3 py-3.5">Observaciones</th>
+                    <th scope="col" className="px-2 py-3.5 text-center whitespace-nowrap">Estado</th>
+                    <th scope="col" className="px-3.5 py-3.5 text-right whitespace-nowrap">Acción</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedPrestamos.map((p) => (
                     <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
                       {/* Equipment with code pastille */}
-                      <td className="px-4 py-3.5 align-middle">
-                        <div className="font-bold text-slate-900 leading-snug">{p.equipoNombre}</div>
+                      <td className="px-3.5 py-3.5 align-middle">
+                        <div className="font-bold text-slate-900 leading-snug line-clamp-2" title={p.equipoNombre}>
+                          {p.equipoNombre}
+                        </div>
                         <div className="mt-1">
                           <span className="inline-block whitespace-nowrap font-mono font-bold text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
                             {p.equipoCodigoPatrimonial}
@@ -396,15 +407,15 @@ export default function PrestamosList() {
                       </td>
 
                       {/* Collaborator & Department */}
-                      <td className="px-4 py-3.5 align-middle">
+                      <td className="px-3.5 py-3.5 align-middle">
                         <div className="flex items-center gap-2.5 min-w-0">
                           <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
                             {p.usuarioNombreCompleto
                               ? p.usuarioNombreCompleto.substring(0, 2).toUpperCase()
                               : "CO"}
                           </div>
-                          <div className="min-w-0">
-                            <p className="font-semibold text-slate-800 leading-tight">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-slate-800 leading-tight truncate">
                               {p.usuarioNombreCompleto}
                             </p>
                             <div className="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-500">
@@ -420,7 +431,7 @@ export default function PrestamosList() {
                       </td>
 
                       {/* Loan Date */}
-                      <td className="px-3 py-3.5 whitespace-nowrap align-middle">
+                      <td className="px-2 py-3.5 whitespace-nowrap align-middle">
                         <div className="flex items-center gap-1 text-slate-700 text-xs font-medium">
                           <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                           <span>{new Date(p.fechaPrestamo).toLocaleDateString()}</span>
@@ -431,7 +442,7 @@ export default function PrestamosList() {
                       </td>
 
                       {/* Return Date */}
-                      <td className="px-3 py-3.5 whitespace-nowrap align-middle">
+                      <td className="px-2 py-3.5 whitespace-nowrap align-middle">
                         {p.fechaDevolucion ? (
                           <div>
                             <div className="flex items-center gap-1 text-slate-700 text-xs font-medium">
@@ -451,24 +462,24 @@ export default function PrestamosList() {
                       </td>
 
                       {/* Observations */}
-                      <td className="px-4 py-3.5 align-middle max-w-xs" title={p.observacion || "Sin observaciones iniciales"}>
+                      <td className="px-3 py-3.5 align-middle" title={p.observacion || "Sin observaciones iniciales"}>
                         <p className="text-slate-600 text-xs truncate">
                           {p.observacion || "Sin observaciones iniciales"}
                         </p>
                       </td>
 
                       {/* Status Badge */}
-                      <td className="px-3 py-3.5 text-center whitespace-nowrap align-middle">
+                      <td className="px-2 py-3.5 text-center whitespace-nowrap align-middle">
                         <StatusBadge status={p.esActivo ? "Prestado" : "Finalizado"} />
                       </td>
 
                       {/* Action */}
-                      <td className="px-4 py-3.5 text-right whitespace-nowrap align-middle">
+                      <td className="px-3.5 py-3.5 text-right whitespace-nowrap align-middle">
                         {p.esActivo ? (
                           <Button
                             onClick={() => openDevolucionModal(p)}
                             variant="success"
-                            className="!text-xs !py-1 !px-3 shadow-xs"
+                            className="!text-xs !py-1 !px-2.5 shadow-xs"
                             title="Registrar devolución de equipo"
                             aria-label={`Registrar devolución de ${p.equipoNombre}`}
                           >

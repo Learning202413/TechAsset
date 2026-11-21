@@ -338,7 +338,7 @@ export default function EquiposList() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs" aria-label="Tabla de inventario de equipos">
+              <table className="w-full min-w-[750px] text-left text-xs" aria-label="Tabla de inventario de equipos">
                 <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                   <tr>
                     <th scope="col" className="px-3.5 py-3">Código Patrimonial</th>
@@ -438,7 +438,7 @@ export default function EquiposList() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={`Actualizar Estado Operativo &bull; ${selectedEquipo?.codigoPatrimonial}`}
+        title={`Actualizar Estado Operativo • ${selectedEquipo?.codigoPatrimonial}`}
       >
         <form onSubmit={handleSaveStatus} className="space-y-4">
           <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs space-y-1.5">
@@ -481,11 +481,11 @@ export default function EquiposList() {
             required
           />
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-3 border-t border-slate-100">
+            <Button variant="secondary" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
               Cancelar
             </Button>
-            <Button type="submit" variant="primary" disabled={isUpdating}>
+            <Button type="submit" variant="primary" disabled={isUpdating} className="w-full sm:w-auto">
               {isUpdating ? "Guardando en DB..." : "Guardar Nuevo Estado"}
             </Button>
           </div>
@@ -534,11 +534,12 @@ export default function EquiposList() {
             </div>
           )}
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-3 border-t border-slate-100">
             <Button
               variant="secondary"
               onClick={() => setDeleteModal({ isOpen: false, equipo: null, isDeleting: false })}
               disabled={deleteModal.isDeleting}
+              className="w-full sm:w-auto"
             >
               Cancelar
             </Button>
@@ -546,6 +547,7 @@ export default function EquiposList() {
               variant="danger"
               onClick={handleConfirmDelete}
               disabled={deleteModal.isDeleting}
+              className="w-full sm:w-auto"
             >
               {deleteModal.isDeleting ? "Eliminando..." : "Confirmar Eliminación"}
             </Button>

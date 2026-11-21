@@ -382,7 +382,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs" aria-label="Tabla de movimientos recientes">
+            <table className="w-full min-w-[650px] text-left text-xs" aria-label="Tabla de movimientos recientes">
               <thead className="bg-slate-50/80 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                 <tr>
                   <th scope="col" className="px-5 py-3.5">Equipo Tecnológico</th>

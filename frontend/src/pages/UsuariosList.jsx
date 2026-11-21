@@ -159,7 +159,7 @@ export default function UsuariosList() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full table-fixed text-left text-xs" aria-label="Tabla de colaboradores">
+              <table className="w-full min-w-[700px] table-fixed text-left text-xs" aria-label="Tabla de colaboradores">
                 <colgroup>
                   <col className="w-[27%]" />
                   <col className="w-[28%]" />
@@ -280,11 +280,12 @@ export default function UsuariosList() {
             </p>
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-3 border-t border-slate-100">
             <Button
               variant="secondary"
               onClick={() => setToggleModal({ isOpen: false, usuario: null, isSubmitting: false })}
               disabled={toggleModal.isSubmitting}
+              className="w-full sm:w-auto"
             >
               Cancelar
             </Button>
@@ -292,6 +293,7 @@ export default function UsuariosList() {
               variant={toggleModal.usuario?.estado ? "danger" : "success"}
               onClick={handleConfirmToggle}
               disabled={toggleModal.isSubmitting}
+              className="w-full sm:w-auto"
             >
               {toggleModal.isSubmitting
                 ? "Procesando..."

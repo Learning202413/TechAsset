@@ -157,7 +157,7 @@ export default function PrestamosList() {
         <div
           role="tablist"
           aria-label="Filtro de movimientos de préstamos"
-          className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/80 shrink-0 select-none"
+          className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/80 shrink-0 select-none overflow-x-auto max-w-full"
         >
           <button
             type="button"
@@ -270,7 +270,7 @@ export default function PrestamosList() {
         ) : (
           <>
             <div className="overflow-x-auto">
-            <table className="w-full table-fixed text-left text-xs" aria-label="Tabla de préstamos de equipos">
+            <table className="w-full min-w-[780px] table-fixed text-left text-xs" aria-label="Tabla de préstamos de equipos">
               <colgroup>
                 <col className="w-[24%]" />
                 <col className="w-[25%]" />
@@ -532,14 +532,15 @@ export default function PrestamosList() {
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-2.5 pt-3 border-t border-slate-100">
+            <Button variant="secondary" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
               Cancelar
             </Button>
             <Button
               type="submit"
               variant="success"
               disabled={isSubmitting || observacionDevolucion.trim().length < 5}
+              className="w-full sm:w-auto"
             >
               <FileCheck2 className="w-4 h-4" />
               <span>{isSubmitting ? "Registrando Devolución..." : "Confirmar Recepción"}</span>

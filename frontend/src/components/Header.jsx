@@ -178,16 +178,18 @@ export default function Header({ onToggleMobileMenu }) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-2.5 pt-3 border-t border-slate-100">
             <Button
               variant="secondary"
               onClick={() => setIsLogoutModalOpen(false)}
+              className="w-full sm:w-auto"
             >
               Permanecer en el Sistema
             </Button>
             <Button
               variant="danger"
               onClick={handleConfirmLogout}
+              className="w-full sm:w-auto"
             >
               <LogOut className="w-4 h-4" />
               Cerrar Sesión Segura

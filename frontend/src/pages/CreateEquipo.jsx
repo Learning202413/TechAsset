@@ -118,7 +118,7 @@ export default function CreateEquipo() {
         <Link to="/equipos">
           <Button variant="secondary">
             <ArrowLeft className="w-4 h-4" />
-            Volver a Inventario de Equipos
+            Volver al Inventario
           </Button>
         </Link>
       }
@@ -187,11 +187,11 @@ export default function CreateEquipo() {
             </Link>
             <Button type="submit" variant="primary" disabled={isSubmitting}>
               {isSubmitting ? (
-                "Guardando activo..."
+                "Guardando..."
               ) : (
                 <>
                   <Check className="w-4 h-4" />
-                  Registrar Equipo
+                  Guardar Equipo
                 </>
               )}
             </Button>

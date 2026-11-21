@@ -74,7 +74,7 @@ export default function Dashboard() {
         </div>
         <Button onClick={() => loadData(true)} variant="primary" className="mx-auto">
           <RefreshCw className="w-4 h-4" />
-          Reintentar Sincronización
+          Reintentar
         </Button>
       </div>
     );
@@ -101,7 +101,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Norman Affordances: Clear, prominent primary action buttons */}
+        {/* Quick action buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
           <Link to="/equipos/nuevo">
             <button
@@ -109,7 +109,7 @@ export default function Dashboard() {
               className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-white bg-blue-600 hover:bg-blue-500 active:scale-98 transition shadow-lg shadow-blue-600/30 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <PlusCircle className="w-4 h-4" />
-              <span>Registrar Equipo Tecnológico</span>
+              <span>Nuevo Equipo</span>
             </button>
           </Link>
 
@@ -119,7 +119,7 @@ export default function Dashboard() {
               className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-slate-100 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
             >
               <ArrowLeftRight className="w-4 h-4 text-emerald-400" />
-              <span>Registrar Nuevo Préstamo de Equipo</span>
+              <span>Nuevo Préstamo</span>
             </button>
           </Link>
 
@@ -129,7 +129,7 @@ export default function Dashboard() {
               className="px-3.5 py-2.5 rounded-xl font-semibold text-xs text-slate-100 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400"
             >
               <Users className="w-4 h-4 text-cyan-400" />
-              <span>Registrar Colaborador / Usuario</span>
+              <span>Nuevo Colaborador</span>
             </button>
           </Link>
 

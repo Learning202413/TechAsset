@@ -195,7 +195,7 @@ export default function EquiposList() {
         <Link to="/equipos/nuevo">
           <Button variant="primary">
             <PlusCircle className="w-4 h-4" />
-            <span>Registrar Equipo Tecnológico</span>
+            <span>Nuevo Equipo</span>
           </Button>
         </Link>
       </div>
@@ -329,7 +329,7 @@ export default function EquiposList() {
                 <Link to="/equipos/nuevo">
                   <Button variant="primary" className="!text-xs">
                     <PlusCircle className="w-3.5 h-3.5" />
-                    Registrar Primer Equipo
+                    Nuevo Equipo
                   </Button>
                 </Link>
               )}
@@ -547,7 +547,7 @@ export default function EquiposList() {
               Cancelar
             </Button>
             <Button type="submit" variant="primary" disabled={isUpdating} className="w-full sm:w-auto">
-              {isUpdating ? "Guardando en DB..." : "Guardar Nuevo Estado"}
+              {isUpdating ? "Guardando..." : "Guardar Estado"}
             </Button>
           </div>
         </form>
@@ -610,7 +610,7 @@ export default function EquiposList() {
               disabled={deleteModal.isDeleting}
               className="w-full sm:w-auto"
             >
-              {deleteModal.isDeleting ? "Eliminando..." : "Confirmar Eliminación"}
+              {deleteModal.isDeleting ? "Eliminando..." : "Eliminar"}
             </Button>
           </div>
         </div>

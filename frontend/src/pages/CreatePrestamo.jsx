@@ -118,7 +118,7 @@ export default function CreatePrestamo() {
         <Link to="/prestamos">
           <Button variant="secondary">
             <ArrowLeft className="w-4 h-4" />
-            Volver a Control de Préstamos
+            Volver a Préstamos
           </Button>
         </Link>
       }
@@ -184,11 +184,11 @@ export default function CreatePrestamo() {
                 disabled={isSubmitting || equipos.length === 0}
               >
                 {isSubmitting ? (
-                  "Procesando asignación..."
+                  "Guardando..."
                 ) : (
                   <>
                     <Check className="w-4 h-4" />
-                    Confirmar Préstamo
+                    Guardar Préstamo
                   </>
                 )}
               </Button>

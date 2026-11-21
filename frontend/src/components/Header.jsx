@@ -169,7 +169,7 @@ export default function Header({ onToggleMobileMenu }) {
               onClick={() => setIsLogoutModalOpen(false)}
               className="w-full sm:w-auto"
             >
-              Permanecer en el Sistema
+              Cancelar
             </Button>
             <Button
               variant="danger"
@@ -177,7 +177,7 @@ export default function Header({ onToggleMobileMenu }) {
               className="w-full sm:w-auto"
             >
               <LogOut className="w-4 h-4" />
-              Cerrar Sesión Segura
+              Cerrar Sesión
             </Button>
           </div>
         </div>

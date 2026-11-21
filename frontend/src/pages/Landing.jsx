@@ -133,7 +133,7 @@ export default function Landing() {
           <Link to="/login">
             <button className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm hover:shadow transition-all inline-flex items-center gap-2 cursor-pointer">
               <LogIn className="w-4 h-4" />
-              <span>Acceder al Sistema</span>
+              <span>Iniciar Sesión</span>
             </button>
           </Link>
         </div>
@@ -161,7 +161,7 @@ export default function Landing() {
               <Link to="/login" className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-600/25 hover:shadow-blue-600/35 transition-all inline-flex items-center justify-center gap-2.5 cursor-pointer">
                   <LogIn className="w-4 h-4" />
-                  <span>Acceder al Sistema (Login)</span>
+                  <span>Iniciar Sesión</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
@@ -169,7 +169,7 @@ export default function Landing() {
               <Link to="/dashboard" className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm border border-slate-300 shadow-2xs transition inline-flex items-center justify-center gap-2 cursor-pointer">
                   <BarChart3 className="w-4 h-4 text-slate-500" />
-                  <span>Ver Panel Ejecutivo</span>
+                  <span>Ver Dashboard</span>
                 </button>
               </Link>
             </div>
@@ -436,7 +436,7 @@ export default function Landing() {
             <Link to="/login">
               <button className="px-8 py-3.5 rounded-xl bg-white text-blue-600 hover:bg-slate-50 font-bold text-sm shadow-lg shadow-blue-900/30 transition-all inline-flex items-center gap-2.5 cursor-pointer">
                 <LogIn className="w-4 h-4" />
-                <span>Ingresar al Sistema (Login)</span>
+                <span>Iniciar Sesión</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>

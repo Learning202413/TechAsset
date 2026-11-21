@@ -95,7 +95,7 @@ export default function UsuariosList() {
         <Link to="/usuarios/nuevo">
           <Button variant="primary">
             <PlusCircle className="w-4 h-4" />
-            <span>Registrar Colaborador / Usuario</span>
+            <span>Nuevo Colaborador</span>
           </Button>
         </Link>
       }
@@ -207,12 +207,12 @@ export default function UsuariosList() {
                       {u.estado ? (
                         <>
                           <UserX className="w-3.5 h-3.5 text-amber-600" />
-                          <span>Deshabilitar Colaborador</span>
+                          <span>Deshabilitar</span>
                         </>
                       ) : (
                         <>
                           <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>Habilitar Colaborador</span>
+                          <span>Habilitar</span>
                         </>
                       )}
                     </button>
@@ -353,10 +353,10 @@ export default function UsuariosList() {
               className="w-full sm:w-auto"
             >
               {toggleModal.isSubmitting
-                ? "Procesando..."
+                ? "Guardando..."
                 : toggleModal.usuario?.estado
-                ? "Confirmar Deshabilitación"
-                : "Confirmar Habilitación"}
+                ? "Deshabilitar"
+                : "Habilitar"}
             </Button>
           </div>
         </div>

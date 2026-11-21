@@ -111,7 +111,7 @@ export default function CreateUsuario() {
         <Link to="/usuarios">
           <Button variant="secondary">
             <ArrowLeft className="w-4 h-4" />
-            Volver a Colaboradores y Usuarios
+            Volver a Colaboradores
           </Button>
         </Link>
       }
@@ -169,11 +169,11 @@ export default function CreateUsuario() {
             </Link>
             <Button type="submit" variant="primary" disabled={isSubmitting}>
               {isSubmitting ? (
-                "Guardando colaborador..."
+                "Guardando..."
               ) : (
                 <>
                   <Check className="w-4 h-4" />
-                  Registrar Colaborador
+                  Guardar Colaborador
                 </>
               )}
             </Button>

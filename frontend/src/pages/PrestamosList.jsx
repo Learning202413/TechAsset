@@ -143,7 +143,7 @@ export default function PrestamosList() {
         <Link to="/prestamos/nuevo">
           <Button variant="primary">
             <PlusCircle className="w-4 h-4" />
-            <span>Registrar Nuevo Préstamo de Equipo</span>
+            <span>Nuevo Préstamo</span>
           </Button>
         </Link>
       </div>
@@ -262,7 +262,7 @@ export default function PrestamosList() {
               <Link to="/prestamos/nuevo">
                 <Button variant="primary" className="!text-xs">
                   <PlusCircle className="w-3.5 h-3.5" />
-                  Registrar Asignación de Equipo
+                  Nuevo Préstamo
                 </Button>
               </Link>
             </div>

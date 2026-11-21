@@ -450,12 +450,12 @@ export default function Login({ initialView = "login" }) {
                 {isSubmitting ? (
                   <>
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                    <span>Verificando credenciales...</span>
+                    <span>Ingresando...</span>
                   </>
                 ) : (
                   <>
                     <LogIn className="w-4 h-4" />
-                    <span>Iniciar Sesión en TechAsset</span>
+                    <span>Iniciar Sesión</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -596,12 +596,12 @@ export default function Login({ initialView = "login" }) {
                   {forgotSubmitting ? (
                     <>
                       <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                      <span>Verificando cuenta institucional...</span>
+                      <span>Verificando...</span>
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      <span>Enviar Instrucciones de Recuperación</span>
+                      <span>Enviar Instrucciones</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -617,7 +617,7 @@ export default function Login({ initialView = "login" }) {
                   className="w-full py-3 px-5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer mt-2"
                 >
                   <ArrowLeft className="w-4 h-4 text-slate-500" />
-                  <span>Volver al Inicio de Sesión</span>
+                  <span>Volver al Login</span>
                 </button>
 
                 {/* Nota de Seguridad Institucional */}
@@ -674,7 +674,7 @@ export default function Login({ initialView = "login" }) {
                     className="w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <LogIn className="w-4 h-4" />
-                    <span>Regresar a Iniciar Sesión</span>
+                    <span>Volver al Login</span>
                   </button>
 
                   <button
@@ -682,7 +682,7 @@ export default function Login({ initialView = "login" }) {
                     onClick={() => setForgotSuccess(false)}
                     className="w-full py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition cursor-pointer"
                   >
-                    Intentar con otro correo electrónico
+                    Intentar con otro correo
                   </button>
                 </div>
               </div>

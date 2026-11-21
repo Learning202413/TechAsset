@@ -22,48 +22,44 @@ export default function Header() {
     if (path.startsWith("/equipos/nuevo")) {
       return [
         { label: "TechAsset", to: "/dashboard" },
-        { label: "Inventario", to: "/equipos" },
-        { label: "Registrar Activo", current: true },
+        { label: "Inventario de Equipos", to: "/equipos" },
+        { label: "Registrar Equipo Tecnológico", current: true },
       ];
     }
     if (path.startsWith("/equipos")) {
       return [
         { label: "TechAsset", to: "/dashboard" },
-        { label: "Módulos", to: "/dashboard" },
         { label: "Inventario de Equipos", current: true },
       ];
     }
     if (path.startsWith("/prestamos/nuevo")) {
       return [
         { label: "TechAsset", to: "/dashboard" },
-        { label: "Préstamos", to: "/prestamos" },
-        { label: "Registrar Asignación", current: true },
+        { label: "Control de Préstamos", to: "/prestamos" },
+        { label: "Registrar Nuevo Préstamo de Equipo", current: true },
       ];
     }
     if (path.startsWith("/prestamos")) {
       return [
         { label: "TechAsset", to: "/dashboard" },
-        { label: "Módulos", to: "/dashboard" },
         { label: "Control de Préstamos", current: true },
       ];
     }
     if (path.startsWith("/usuarios/nuevo")) {
       return [
         { label: "TechAsset", to: "/dashboard" },
-        { label: "Colaboradores", to: "/usuarios" },
-        { label: "Registrar Usuario", current: true },
+        { label: "Colaboradores y Usuarios", to: "/usuarios" },
+        { label: "Registrar Colaborador / Usuario", current: true },
       ];
     }
     if (path.startsWith("/usuarios")) {
       return [
         { label: "TechAsset", to: "/dashboard" },
-        { label: "Módulos", to: "/dashboard" },
-        { label: "Directorio Colaboradores", current: true },
+        { label: "Colaboradores y Usuarios", current: true },
       ];
     }
     return [
       { label: "TechAsset", to: "/dashboard" },
-      { label: "Panel Principal", to: "/dashboard" },
       { label: "Dashboard General", current: true },
     ];
   };

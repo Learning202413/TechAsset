@@ -181,10 +181,10 @@ export default function EquiposList() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-              Inventario de Equipos Tecnológicos
+              Inventario de Equipos
             </h1>
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80">
-              Inventario Oficial
+              Catálogo Oficial
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">

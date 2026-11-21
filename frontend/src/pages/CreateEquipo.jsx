@@ -118,7 +118,7 @@ export default function CreateEquipo() {
         <Link to="/equipos">
           <Button variant="secondary">
             <ArrowLeft className="w-4 h-4" />
-            Volver a Inventario
+            Volver a Inventario de Equipos
           </Button>
         </Link>
       }

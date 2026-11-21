@@ -129,7 +129,7 @@ export default function PrestamosList() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-              Control de Préstamos y Asignaciones
+              Control de Préstamos
             </h1>
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80">
               Registro de Custodia

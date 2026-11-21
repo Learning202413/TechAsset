@@ -111,7 +111,7 @@ export default function CreateUsuario() {
         <Link to="/usuarios">
           <Button variant="secondary">
             <ArrowLeft className="w-4 h-4" />
-            Volver a Colaboradores
+            Volver a Colaboradores y Usuarios
           </Button>
         </Link>
       }

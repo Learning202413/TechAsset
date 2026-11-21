@@ -89,8 +89,8 @@ export default function UsuariosList() {
 
   return (
     <PageContainer
-      title="Gestión de Colaboradores y Usuarios"
-      subtitle="Administración del personal autorizado para solicitar activos tecnológicos institucionales"
+      title="Colaboradores y Usuarios"
+      subtitle="Directorio y administración del personal autorizado para la custodia de activos"
       actions={
         <Link to="/usuarios/nuevo">
           <Button variant="primary">

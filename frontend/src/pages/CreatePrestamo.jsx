@@ -118,7 +118,7 @@ export default function CreatePrestamo() {
         <Link to="/prestamos">
           <Button variant="secondary">
             <ArrowLeft className="w-4 h-4" />
-            Volver a Préstamos
+            Volver a Control de Préstamos
           </Button>
         </Link>
       }

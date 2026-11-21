@@ -337,36 +337,97 @@ export default function EquiposList() {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[750px] text-left text-xs" aria-label="Tabla de inventario de equipos">
+            {/* VISTA MÓVIL: Tarjetas de Equipos (Pantallas < md) */}
+            <div className="md:hidden divide-y divide-slate-100">
+              {paginatedEquipos.map((e) => (
+                <div key={e.id} className="p-4 space-y-3 bg-white hover:bg-slate-50/50 transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <span className="font-mono font-bold text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/80">
+                        {e.codigoPatrimonial}
+                      </span>
+                      <h4 className="font-bold text-slate-900 text-sm mt-1 leading-snug">
+                        {e.nombre}
+                      </h4>
+                    </div>
+                    <div className="shrink-0">
+                      <StatusBadge status={e.estado} />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Categoría</span>
+                      <span className="font-semibold text-slate-800">{e.categoria}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Marca</span>
+                      <span className="font-semibold text-slate-800">{e.marca}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-0.5 text-xs text-slate-500">
+                    <span className="text-[11px]">Historial de préstamos:</span>
+                    <span className="font-mono font-bold text-slate-800 px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200/60 text-[11px]">
+                      {e.totalPrestamos} {e.totalPrestamos === 1 ? "préstamo" : "préstamos"}
+                    </span>
+                  </div>
+
+                  {/* Acciones Móviles */}
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => openStatusModal(e)}
+                      className="w-full py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Estado</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => openDeleteModal(e)}
+                      className="w-full py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                      <span>Eliminar</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* VISTA ESCRITORIO / TABLET: Tabla Natural Expandida (Pantallas md+) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs" aria-label="Tabla de inventario de equipos">
                 <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
                   <tr>
-                    <th scope="col" className="px-3.5 py-3">Código Patrimonial</th>
-                    <th scope="col" className="px-3.5 py-3">Nombre y Modelo</th>
-                    <th scope="col" className="px-3.5 py-3">Categoría</th>
-                    <th scope="col" className="px-3.5 py-3">Marca</th>
-                    <th scope="col" className="px-3.5 py-3">Estado Operativo</th>
-                    <th scope="col" className="px-3.5 py-3 text-center">Historial</th>
-                    <th scope="col" className="px-3.5 py-3 text-right">Acciones</th>
+                    <th scope="col" className="px-4 py-3.5">Código Patrimonial</th>
+                    <th scope="col" className="px-4 py-3.5">Nombre y Modelo</th>
+                    <th scope="col" className="px-4 py-3.5">Categoría</th>
+                    <th scope="col" className="px-4 py-3.5">Marca</th>
+                    <th scope="col" className="px-3 py-3.5 text-center">Estado Operativo</th>
+                    <th scope="col" className="px-3 py-3.5 text-center">Historial</th>
+                    <th scope="col" className="px-4 py-3.5 text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedEquipos.map((e) => (
                   <tr key={e.id} className="hover:bg-slate-50/70 transition-colors">
                     {/* Monospace Pastille Badge for Code */}
-                    <td className="px-3.5 py-3 whitespace-nowrap">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
                       <span className="font-mono font-bold text-[11px] px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
                         {e.codigoPatrimonial}
                       </span>
                     </td>
 
                     {/* Equipment Name */}
-                    <td className="px-3.5 py-3">
-                      <div className="font-bold text-slate-900">{e.nombre}</div>
+                    <td className="px-4 py-3.5">
+                      <div className="font-bold text-slate-900 leading-snug">{e.nombre}</div>
                     </td>
 
                     {/* Category */}
-                    <td className="px-3.5 py-3">
+                    <td className="px-4 py-3.5">
                       <span className="inline-flex items-center gap-1 text-slate-600">
                         <Tag className="w-3 h-3 text-slate-400" />
                         {e.categoria}
@@ -374,28 +435,28 @@ export default function EquiposList() {
                     </td>
 
                     {/* Brand */}
-                    <td className="px-3.5 py-3 text-slate-600 font-medium">
+                    <td className="px-4 py-3.5 text-slate-600 font-medium">
                       {e.marca}
                     </td>
 
                     {/* Semantic Status */}
-                    <td className="px-3.5 py-3 whitespace-nowrap">
+                    <td className="px-3 py-3.5 text-center whitespace-nowrap">
                       <StatusBadge status={e.estado} />
                     </td>
 
                     {/* Total loans */}
-                    <td className="px-3.5 py-3 text-center whitespace-nowrap">
+                    <td className="px-3 py-3.5 text-center whitespace-nowrap">
                       <span className="font-mono text-slate-600 font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-[11px]">
                         {e.totalPrestamos} {e.totalPrestamos === 1 ? "préstamo" : "préstamos"}
                       </span>
                     </td>
 
                     {/* Actions with Norman Signifiers */}
-                    <td className="px-3.5 py-3 text-right whitespace-nowrap space-x-1.5">
+                    <td className="px-4 py-3.5 text-right whitespace-nowrap space-x-1.5">
                       <button
                         type="button"
                         onClick={() => openStatusModal(e)}
-                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
                         title="Actualizar estado operativo del equipo"
                         aria-label={`Actualizar estado del equipo ${e.codigoPatrimonial}`}
                       >
@@ -406,7 +467,7 @@ export default function EquiposList() {
                       <button
                         type="button"
                         onClick={() => openDeleteModal(e)}
-                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-700 border border-slate-200 inline-flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-red-500/20 cursor-pointer"
                         title={
                           e.totalPrestamos > 0
                             ? "Equipo con historial: protegido para auditoría institucional"

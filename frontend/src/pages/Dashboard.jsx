@@ -381,48 +381,87 @@ export default function Dashboard() {
             <p className="text-xs mt-1">Haga clic en 'Nuevo Préstamo' para iniciar la custodia de un activo.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[650px] text-left text-xs" aria-label="Tabla de movimientos recientes">
-              <thead className="bg-slate-50/80 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
-                <tr>
-                  <th scope="col" className="px-5 py-3.5">Equipo Tecnológico</th>
-                  <th scope="col" className="px-5 py-3.5">Colaborador Responsable</th>
-                  <th scope="col" className="px-5 py-3.5">Área</th>
-                  <th scope="col" className="px-5 py-3.5">Fecha de Asignación</th>
-                  <th scope="col" className="px-5 py-3.5 text-right">Estado</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {stats.movimientosRecientes.map((m) => (
-                  <tr key={m.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-5 py-3.5">
-                      <div className="font-semibold text-slate-900">{m.equipoNombre}</div>
-                      <div className="font-mono text-[11px] text-blue-700 font-bold mt-0.5">
+          <>
+            {/* VISTA MÓVIL: Movimientos Recientes Adaptados (Pantallas < md) */}
+            <div className="md:hidden divide-y divide-slate-100">
+              {stats.movimientosRecientes.map((m) => (
+                <div key={m.id} className="p-4 space-y-2.5 bg-white hover:bg-slate-50/50 transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <span className="inline-block font-mono text-[10px] text-blue-700 font-bold px-2 py-0.5 rounded bg-blue-50 border border-blue-200/80">
                         {m.equipoCodigoPatrimonial}
-                      </div>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px] flex items-center justify-center shrink-0 border border-slate-200">
-                          {m.usuarioNombreCompleto
-                            ? m.usuarioNombreCompleto.substring(0, 2).toUpperCase()
-                            : "TI"}
-                        </div>
-                        <span className="font-medium text-slate-800">{m.usuarioNombreCompleto}</span>
-                      </div>
-                    </td>
-                    <td className="px-5 py-3.5 text-slate-600">{m.usuarioArea}</td>
-                    <td className="px-5 py-3.5 font-mono text-slate-500">
-                      {new Date(m.fechaPrestamo).toLocaleDateString()} &bull; {new Date(m.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </td>
-                    <td className="px-5 py-3.5 text-right">
+                      </span>
+                      <h4 className="font-bold text-slate-900 text-sm mt-1 truncate">{m.equipoNombre}</h4>
+                    </div>
+                    <div className="shrink-0">
                       <StatusBadge status={m.esActivo ? "Prestado" : "Finalizado"} />
-                    </td>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-slate-600 pt-1">
+                    <div className="flex items-center gap-2 truncate">
+                      <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px] flex items-center justify-center shrink-0 border border-slate-200">
+                        {m.usuarioNombreCompleto
+                          ? m.usuarioNombreCompleto.substring(0, 2).toUpperCase()
+                          : "TI"}
+                      </div>
+                      <div className="truncate">
+                        <p className="font-semibold text-slate-900 truncate">{m.usuarioNombreCompleto}</p>
+                        <p className="text-[10px] text-slate-400">{m.usuarioArea}</p>
+                      </div>
+                    </div>
+                    <span className="text-[11px] font-mono text-slate-400 shrink-0">
+                      {new Date(m.fechaPrestamo).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* VISTA ESCRITORIO / TABLET: Tabla Completa (md+) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs" aria-label="Tabla de movimientos recientes">
+                <thead className="bg-slate-50/80 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
+                  <tr>
+                    <th scope="col" className="px-5 py-3.5">Equipo Tecnológico</th>
+                    <th scope="col" className="px-5 py-3.5">Colaborador Responsable</th>
+                    <th scope="col" className="px-5 py-3.5">Área</th>
+                    <th scope="col" className="px-5 py-3.5">Fecha de Asignación</th>
+                    <th scope="col" className="px-5 py-3.5 text-right">Estado</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {stats.movimientosRecientes.map((m) => (
+                    <tr key={m.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="px-5 py-3.5">
+                        <div className="font-semibold text-slate-900">{m.equipoNombre}</div>
+                        <div className="font-mono text-[11px] text-blue-700 font-bold mt-0.5">
+                          {m.equipoCodigoPatrimonial}
+                        </div>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px] flex items-center justify-center shrink-0 border border-slate-200">
+                            {m.usuarioNombreCompleto
+                              ? m.usuarioNombreCompleto.substring(0, 2).toUpperCase()
+                              : "TI"}
+                          </div>
+                          <span className="font-medium text-slate-800">{m.usuarioNombreCompleto}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-3.5 text-slate-600">{m.usuarioArea}</td>
+                      <td className="px-5 py-3.5 font-mono text-slate-500">
+                        {new Date(m.fechaPrestamo).toLocaleDateString()} &bull; {new Date(m.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </td>
+                      <td className="px-5 py-3.5 text-right">
+                        <StatusBadge status={m.esActivo ? "Prestado" : "Finalizado"} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

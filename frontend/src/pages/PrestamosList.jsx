@@ -269,133 +269,224 @@ export default function PrestamosList() {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
-            <table className="w-full min-w-[780px] table-fixed text-left text-xs" aria-label="Tabla de préstamos de equipos">
-              <colgroup>
-                <col className="w-[24%]" />
-                <col className="w-[25%]" />
-                <col className="w-[11%]" />
-                <col className="w-[11%]" />
-                <col className="w-[12%]" />
-                <col className="w-[8%]" />
-                <col className="w-[9%]" />
-              </colgroup>
-              <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
-                <tr>
-                  <th scope="col" className="px-2.5 py-3">Equipo Asignado</th>
-                  <th scope="col" className="px-2.5 py-3">Colaborador / Área</th>
-                  <th scope="col" className="px-2 py-3 whitespace-nowrap">Fecha Salida</th>
-                  <th scope="col" className="px-2 py-3 whitespace-nowrap">Fecha Devolución</th>
-                  <th scope="col" className="px-2.5 py-3">Observaciones</th>
-                  <th scope="col" className="px-2 py-3 text-center whitespace-nowrap">Estado</th>
-                  <th scope="col" className="px-2 py-3 text-right whitespace-nowrap">Acción</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {paginatedPrestamos.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
-                    {/* Equipment with code pastille */}
-                    <td className="px-2.5 py-3 align-middle">
-                      <div className="font-bold text-slate-900 leading-snug line-clamp-2">{p.equipoNombre}</div>
-                      <div className="mt-1">
-                        <span className="inline-block whitespace-nowrap font-mono font-bold text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
-                          {p.equipoCodigoPatrimonial}
-                        </span>
-                      </div>
-                    </td>
+            {/* VISTA MÓVIL: Tarjetas Adaptativas (Pantallas < md) */}
+            <div className="md:hidden divide-y divide-slate-100">
+              {paginatedPrestamos.map((p) => (
+                <div key={p.id} className="p-4 space-y-3 bg-white hover:bg-slate-50/50 transition-colors">
+                  {/* Top Bar: Código, Nombre y Estado */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <span className="inline-block font-mono font-bold text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/80">
+                        {p.equipoCodigoPatrimonial}
+                      </span>
+                      <h4 className="font-bold text-slate-900 text-sm mt-1 leading-snug">
+                        {p.equipoNombre}
+                      </h4>
+                    </div>
+                    <div className="shrink-0">
+                      <StatusBadge status={p.esActivo ? "Prestado" : "Finalizado"} />
+                    </div>
+                  </div>
 
-                    {/* Collaborator & Department unified for optimal scanning and zero overflow */}
-                    <td className="px-2.5 py-3 align-middle">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
-                          {p.usuarioNombreCompleto
-                            ? p.usuarioNombreCompleto.substring(0, 2).toUpperCase()
-                            : "CO"}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-slate-800 leading-tight truncate">
-                            {p.usuarioNombreCompleto}
-                          </p>
-                          <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200/60 whitespace-nowrap shrink-0">
-                              {p.usuarioArea}
-                            </span>
-                            <span className="text-[10px] text-slate-400 font-mono truncate" title={p.usuarioCorreo}>
-                              {p.usuarioCorreo}
-                            </span>
-                          </div>
-                        </div>
+                  {/* Colaborador & Área */}
+                  <div className="flex items-center gap-2.5 pt-1">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                      {p.usuarioNombreCompleto
+                        ? p.usuarioNombreCompleto.substring(0, 2).toUpperCase()
+                        : "CO"}
+                    </div>
+                    <div className="min-w-0 flex-1 text-xs">
+                      <p className="font-semibold text-slate-900 truncate">
+                        {p.usuarioNombreCompleto}
+                      </p>
+                      <div className="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-500 truncate">
+                        <span className="font-medium text-slate-700">{p.usuarioArea}</span>
+                        <span>&bull;</span>
+                        <span className="font-mono text-slate-400 truncate">{p.usuarioCorreo}</span>
                       </div>
-                    </td>
+                    </div>
+                  </div>
 
-                    {/* Loan Date (Compact Stacked) */}
-                    <td className="px-2 py-3 whitespace-nowrap align-middle">
-                      <div className="flex items-center gap-1 text-slate-700 text-xs font-medium">
+                  {/* Fechas de Custodia */}
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">
+                        Salida
+                      </span>
+                      <div className="flex items-center gap-1 text-slate-700 font-medium">
                         <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
                         <span>{new Date(p.fechaPrestamo).toLocaleDateString()}</span>
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono pl-4">
+                      <span className="text-[10px] text-slate-400 font-mono block pl-4">
                         {new Date(p.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </div>
-                    </td>
+                      </span>
+                    </div>
 
-                    {/* Return Date (Compact Stacked) */}
-                    <td className="px-2 py-3 whitespace-nowrap align-middle">
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">
+                        Devolución
+                      </span>
                       {p.fechaDevolucion ? (
-                        <div>
-                          <div className="flex items-center gap-1 text-slate-700 text-xs font-medium">
+                        <>
+                          <div className="flex items-center gap-1 text-slate-700 font-medium">
                             <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
                             <span>{new Date(p.fechaDevolucion).toLocaleDateString()}</span>
                           </div>
-                          <div className="text-[10px] text-slate-400 font-mono pl-4">
+                          <span className="text-[10px] text-slate-400 font-mono block pl-4">
                             {new Date(p.fechaDevolucion).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </div>
-                        </div>
+                          </span>
+                        </>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/80">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/80 mt-1">
                           <Clock className="w-2.5 h-2.5 text-amber-500" />
                           En custodia
                         </span>
                       )}
-                    </td>
+                    </div>
+                  </div>
 
-                    {/* Observations */}
-                    <td className="px-2.5 py-3 align-middle" title={p.observacion || "Sin observaciones iniciales"}>
-                      <p className="text-slate-600 text-xs truncate">
-                        {p.observacion || "Sin observaciones iniciales"}
-                      </p>
-                    </td>
+                  {/* Observaciones si existen */}
+                  {p.observacion && (
+                    <p className="text-xs text-slate-600 bg-slate-50/70 p-2 rounded-lg border border-slate-100 italic">
+                      &ldquo;{p.observacion}&rdquo;
+                    </p>
+                  )}
 
-                    {/* Status Badge */}
-                    <td className="px-2 py-3 text-center whitespace-nowrap align-middle">
-                      <StatusBadge status={p.esActivo ? "Prestado" : "Finalizado"} />
-                    </td>
+                  {/* Acción Devolver Móvil */}
+                  {p.esActivo && (
+                    <Button
+                      onClick={() => openDevolucionModal(p)}
+                      variant="success"
+                      className="w-full !py-2.5 !text-xs justify-center shadow-xs"
+                      aria-label={`Registrar devolución de ${p.equipoNombre}`}
+                    >
+                      <FileCheck2 className="w-4 h-4" />
+                      <span>Registrar Devolución</span>
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
 
-                    {/* Action with clear Norman Signifier */}
-                    <td className="px-2 py-3 text-right whitespace-nowrap align-middle">
-                      {p.esActivo ? (
-                        <Button
-                          onClick={() => openDevolucionModal(p)}
-                          variant="success"
-                          className="!text-xs !py-1 !px-2.5 shadow-xs"
-                          title="Registrar devolución de equipo"
-                          aria-label={`Registrar devolución de ${p.equipoNombre}`}
-                        >
-                          <FileCheck2 className="w-3.5 h-3.5" />
-                          <span>Devolver</span>
-                        </Button>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 px-1 py-0.5">
-                          <CheckCircle className="w-3 h-3 text-slate-400" />
-                          Devuelto
-                        </span>
-                      )}
-                    </td>
+            {/* VISTA DESKTOP / TABLET: Tabla Natural Expandida (Pantallas md+) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs" aria-label="Tabla de préstamos de equipos">
+                <thead className="bg-slate-50/90 text-slate-600 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200/80">
+                  <tr>
+                    <th scope="col" className="px-4 py-3.5">Equipo Asignado</th>
+                    <th scope="col" className="px-4 py-3.5">Colaborador / Área</th>
+                    <th scope="col" className="px-3 py-3.5 whitespace-nowrap">Fecha Salida</th>
+                    <th scope="col" className="px-3 py-3.5 whitespace-nowrap">Fecha Devolución</th>
+                    <th scope="col" className="px-4 py-3.5">Observaciones</th>
+                    <th scope="col" className="px-3 py-3.5 text-center whitespace-nowrap">Estado</th>
+                    <th scope="col" className="px-4 py-3.5 text-right whitespace-nowrap">Acción</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {paginatedPrestamos.map((p) => (
+                    <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
+                      {/* Equipment with code pastille */}
+                      <td className="px-4 py-3.5 align-middle">
+                        <div className="font-bold text-slate-900 leading-snug">{p.equipoNombre}</div>
+                        <div className="mt-1">
+                          <span className="inline-block whitespace-nowrap font-mono font-bold text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
+                            {p.equipoCodigoPatrimonial}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Collaborator & Department */}
+                      <td className="px-4 py-3.5 align-middle">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
+                            {p.usuarioNombreCompleto
+                              ? p.usuarioNombreCompleto.substring(0, 2).toUpperCase()
+                              : "CO"}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-semibold text-slate-800 leading-tight">
+                              {p.usuarioNombreCompleto}
+                            </p>
+                            <div className="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-500">
+                              <span className="px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200/60 whitespace-nowrap shrink-0">
+                                {p.usuarioArea}
+                              </span>
+                              <span className="text-[10px] text-slate-400 font-mono truncate" title={p.usuarioCorreo}>
+                                {p.usuarioCorreo}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Loan Date */}
+                      <td className="px-3 py-3.5 whitespace-nowrap align-middle">
+                        <div className="flex items-center gap-1 text-slate-700 text-xs font-medium">
+                          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>{new Date(p.fechaPrestamo).toLocaleDateString()}</span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 font-mono pl-4.5">
+                          {new Date(p.fechaPrestamo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </td>
+
+                      {/* Return Date */}
+                      <td className="px-3 py-3.5 whitespace-nowrap align-middle">
+                        {p.fechaDevolucion ? (
+                          <div>
+                            <div className="flex items-center gap-1 text-slate-700 text-xs font-medium">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                              <span>{new Date(p.fechaDevolucion).toLocaleDateString()}</span>
+                            </div>
+                            <div className="text-[10px] text-slate-400 font-mono pl-4.5">
+                              {new Date(p.fechaDevolucion).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/80">
+                            <Clock className="w-2.5 h-2.5 text-amber-500" />
+                            En custodia
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Observations */}
+                      <td className="px-4 py-3.5 align-middle max-w-xs" title={p.observacion || "Sin observaciones iniciales"}>
+                        <p className="text-slate-600 text-xs truncate">
+                          {p.observacion || "Sin observaciones iniciales"}
+                        </p>
+                      </td>
+
+                      {/* Status Badge */}
+                      <td className="px-3 py-3.5 text-center whitespace-nowrap align-middle">
+                        <StatusBadge status={p.esActivo ? "Prestado" : "Finalizado"} />
+                      </td>
+
+                      {/* Action */}
+                      <td className="px-4 py-3.5 text-right whitespace-nowrap align-middle">
+                        {p.esActivo ? (
+                          <Button
+                            onClick={() => openDevolucionModal(p)}
+                            variant="success"
+                            className="!text-xs !py-1 !px-3 shadow-xs"
+                            title="Registrar devolución de equipo"
+                            aria-label={`Registrar devolución de ${p.equipoNombre}`}
+                          >
+                            <FileCheck2 className="w-3.5 h-3.5" />
+                            <span>Devolver</span>
+                          </Button>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 px-1 py-0.5">
+                            <CheckCircle className="w-3 h-3 text-slate-400" />
+                            Devuelto
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
           <Pagination
             currentPage={currentPage}

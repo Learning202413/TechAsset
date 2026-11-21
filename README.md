@@ -153,21 +153,4 @@ npm run dev
 
 ---
 
-## 5. Documentación Académica Formal (PDF)
 
-El proyecto cuenta con dos documentos técnicos exhaustivos preparados según las especificaciones y rúbrica de evaluación del Caso Práctico Integrador:
-
-1. **[DOCUMENTO_DE_ANALISIS.md](file:///c:/Users/cjazz/Documents/2026-II/Construccion%20de%20Software/TechAsset/DOCUMENTO_DE_ANALISIS.md)**:
-   - Análisis y diagnóstico del problema real en *Innovatech Solutions S.A.C.*
-   - Definición de los 3 actores normativos y matriz de Control de Accesos por Rol (RBAC).
-   - Especificación formal de requerimientos funcionales (RF-01 a RF-17) y reglas de negocio (RN-01 a RN-10).
-   - Modelo de datos referencial con diagrama Entidad-Relación y diccionario de datos.
-   - Justificación del ciclo de vida iterativo e incremental y estándares de construcción.
-
-2. **[INFORME_TECNICO.md](file:///c:/Users/cjazz/Documents/2026-II/Construccion%20de%20Software/TechAsset/INFORME_TECNICO.md)**:
-   - Matriz de correspondencia con la Rúbrica de Evaluación (20/20 puntos).
-   - Catálogo de componentes reutilizables y técnicas de refinamiento aplicadas.
-   - Detalle de módulos de salida y Dashboard ejecutivo con los 6 indicadores normativos.
-   - Resultados verificados de los 7 escenarios mínimos de uso real.
-   - Respuesta técnica fundamentada a la Pregunta de Reflexión (Sección 13).
-   - Guía estructurada para la sustentación y defensa del proyecto ante el docente evaluador.

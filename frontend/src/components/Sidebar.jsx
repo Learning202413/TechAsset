@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import logoImg from "../assets/logo.jpg";
+import logoIcon from "../assets/logo-icon.png";
 import { 
   LayoutDashboard, 
   Laptop, 
@@ -34,22 +34,24 @@ export default function Sidebar() {
     >
       <div className="flex-1 flex flex-col min-h-0 space-y-6">
         {/* Brand / Executive Header */}
-        <div className="px-2 py-3 border-b border-slate-800/80 flex items-center gap-3 shrink-0">
-          <img 
-            src={logoImg} 
-            alt="TechAsset Logo" 
-            className="w-9 h-9 object-contain rounded-xl bg-white p-0.5 shadow-md shadow-blue-500/20" 
-          />
-          <div>
+        <div className="px-1.5 py-3 border-b border-slate-800/80 flex items-center gap-3 shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0 p-1.5 border border-white/20">
+            <img 
+              src={logoIcon} 
+              alt="TechAsset Logo" 
+              className="w-full h-full object-contain" 
+            />
+          </div>
+          <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <h2 className="text-base font-extrabold tracking-tight text-white leading-none">
+              <h2 className="text-base font-black tracking-tight text-white leading-none">
                 Tech<span className="text-cyan-400">Asset</span>
               </h2>
-              <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
+              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-500/25 text-blue-300 border border-blue-500/40">
                 PRO
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium tracking-tight mt-1">
+            <p className="text-[11px] text-slate-400 font-medium tracking-tight mt-1 truncate">
               Innovatech Solutions &bull; TI
             </p>
           </div>

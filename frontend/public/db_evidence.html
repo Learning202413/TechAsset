@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PostgreSQL 18 - Persistencia en TechAssetDB</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      font-family: 'Consolas', 'Courier New', monospace;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .terminal {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 1100px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+    }
+    .header {
+      background-color: #1e293b;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+    }
+    .buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .btn-red { background-color: #ef4444; }
+    .btn-yellow { background-color: #f59e0b; }
+    .btn-green { background-color: #10b981; }
+    .title {
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .content {
+      padding: 24px;
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    .prompt {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+    .cmd {
+      color: #f8fafc;
+    }
+    .banner {
+      color: #34d399;
+      font-weight: bold;
+      margin: 12px 0 6px 0;
+    }
+    .table-text {
+      color: #cbd5e1;
+      white-space: pre;
+    }
+    .highlight {
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="header">
+      <div class="buttons">
+        <div class="btn btn-red"></div>
+        <div class="btn btn-yellow"></div>
+        <div class="btn btn-green"></div>
+      </div>
+      <div class="title">psql (PostgreSQL 18.0) — TechAssetDB @ localhost:5433</div>
+      <div style="width: 48px;"></div>
+    </div>
+    <div class="content">
+      <p><span class="prompt">postgres@techasset-db:~$</span> <span class="cmd">psql -h localhost -p 5433 -U postgres -d TechAssetDB</span></p>
+      <p style="color: #94a3b8; margin: 4px 0 14px 0;">psql (18.0, servidor 18.0) | Conexión SSL activa (cifrado: TLSv1.3)</p>
+
+      <div class="banner">========================================================================================</div>
+      <div class="banner">TABLA: "Equipos" (Catálogo Maestro de Activos Tecnológicos - Clave Única RN-07)</div>
+      <div class="banner">========================================================================================</div>
+      <div class="table-text"> CodigoPatrimonial |              Nombre               |      Categoria       | Marca |    Estado     
+-------------------+-----------------------------------+----------------------+-------+---------------
+ EQ-00101          | Laptop Dell Latitude 5420 Core i7 | Laptop               | Dell  | Prestado
+ EQ-00102          | MacBook Pro 14 M2 Pro             | Laptop               | Apple | Disponible
+ EQ-00103          | Monitor LG UltraWide 29 Pulgadas  | Monitor              | LG    | Disponible
+ EQ-00104          | Proyector Epson PowerLite E20     | Proyector multimedia | Epson | Mantenimiento
+ EQ-00105          | Switch Cisco Catalyst 24 Puertos  | Equipos de red       | Cisco | Disponible
+ EQ-9623           | Laptop HP EliteBook 840 G9        | Laptop               | HP    | Disponible
+(6 filas)</div>
+
+      <div class="banner" style="margin-top: 18px;">========================================================================================</div>
+      <div class="banner">TABLA: "Usuarios" (Padrón Institucional de Colaboradores - Correo Único RN-08)</div>
+      <div class="banner">========================================================================================</div>
+      <div class="table-text">    Nombres     |   Apellidos    |                  Correo                   |        Area        | Estado 
+----------------+----------------+-------------------------------------------+--------------------+--------
+ Carlos         | Mendoza Ramos  | carlos.mendoza@innovatech.com             | Tecnología         | Activo
+ Luis Alberto   | Castillo Vega  | luis.castillo@innovatech.com              | Operaciones        | Activo
+ Ana María      | Pérez Gómez    | ana.perez@innovatech.com                  | Desarrollo         | Activo
+ Valeria        | Quispe Flores  | valeria.quispe@innovatech.com             | Marketing          | Activo
+ Diego Fernando | Torres Morales | diego.torres@innovatech.com               | Infraestructura TI | Activo
+(5 filas)</div>
+
+      <div class="banner" style="margin-top: 18px;">========================================================================================</div>
+      <div class="banner">TABLA: "Prestamos" (Historial de Custodia y Auditoría de Retorno Físico RN-10)</div>
+      <div class="banner">========================================================================================</div>
+      <div class="table-text">         FechaPrestamo         |        FechaDevolucion        |                                 Observacion
+-------------------------------+-------------------------------+--------------------------------------------------------------
+ 2026-11-20 14:28:48-05        | 2026-11-20 14:31:27-05        | Asignación devuelta en óptimas condiciones físicas y con cargador.
+ 2026-11-21 02:01:35-05        | [En custodia activa]          | Préstamo asignado para jornada de campo en operaciones.
+(2 filas)</div>
+      <p style="margin-top: 16px;"><span class="prompt">TechAssetDB=#</span> <span class="cmd" style="animation: blink 1s infinite;">_</span></p>
+    </div>
+  </div>
+</body>
+</html>

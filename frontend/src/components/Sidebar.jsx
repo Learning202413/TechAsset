@@ -34,8 +34,8 @@ export default function Sidebar() {
     >
       <div className="flex-1 flex flex-col min-h-0 space-y-6">
         {/* Brand / Executive Header */}
-        <div className="px-1.5 py-3 border-b border-slate-800/80 flex items-center gap-3 shrink-0">
-          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0 p-1.5 border border-white/20">
+        <div className="px-1 py-3 border-b border-slate-800/80 flex items-center gap-3 shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shadow-xl shadow-blue-500/25 shrink-0 p-2 border border-white/20">
             <img 
               src={logoIcon} 
               alt="TechAsset Logo" 

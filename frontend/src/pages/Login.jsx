@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logoImg from "../assets/logo.jpg";
+import logoIcon from "../assets/logo-icon.png";
 import { 
   Layers, 
   LogIn, 
@@ -139,17 +139,19 @@ export default function Login() {
 
         {/* Top Header in Left Pane */}
         <div className="relative z-10 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <img 
-              src={logoImg} 
-              alt="TechAsset Logo" 
-              className="w-11 h-11 object-contain rounded-xl bg-white p-1 shadow-lg shadow-blue-500/20 group-hover:scale-105 transition" 
-            />
+          <Link to="/" className="flex items-center gap-3.5 group">
+            <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center p-2 shadow-xl shadow-blue-500/25 group-hover:scale-105 transition border border-white/20 shrink-0">
+              <img 
+                src={logoIcon} 
+                alt="TechAsset Logo" 
+                className="w-full h-full object-contain" 
+              />
+            </div>
             <div>
-              <span className="text-2xl font-black tracking-tight text-white flex items-center gap-1.5">
+              <span className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
                 Tech<span className="text-cyan-400">Asset</span> <span className="text-[10px] uppercase font-bold text-blue-400 bg-blue-500/20 px-2 py-0.5 rounded border border-blue-500/30">Enterprise</span>
               </span>
-              <span className="text-xs font-semibold text-slate-400 tracking-wider block">
+              <span className="text-xs font-semibold text-slate-400 tracking-wider block mt-0.5">
                 INNOVATECH SOLUTIONS S.A.C.
               </span>
             </div>
@@ -246,8 +248,8 @@ export default function Login() {
         <div className="max-w-md w-full mx-auto my-auto">
           {/* Header */}
           <div className="mb-6">
-            <div className="w-12 h-12 rounded-xl bg-white p-1 border border-slate-200 shadow-xs mb-3 flex items-center justify-center">
-              <img src={logoImg} alt="TechAsset Logo" className="w-full h-full object-contain" />
+            <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-slate-200 shadow-md shadow-blue-500/10 mb-4 flex items-center justify-center">
+              <img src={logoIcon} alt="TechAsset Logo" className="w-full h-full object-contain" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               Bienvenido a Tech<span className="text-cyan-600">Asset</span>

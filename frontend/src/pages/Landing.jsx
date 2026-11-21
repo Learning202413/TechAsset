@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import logoImg from "../assets/logo.jpg";
+import logoIcon from "../assets/logo-icon.png";
 import { 
   Layers, 
   LogIn, 
@@ -88,12 +88,14 @@ export default function Landing() {
       {/* 1. NAVEGACIÓN INSTITUCIONAL */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 h-18 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <img 
-              src={logoImg} 
-              alt="TechAsset Logo" 
-              className="w-10 h-10 object-contain rounded-xl shadow-xs group-hover:scale-105 transition-transform bg-white" 
-            />
+          <Link to="/" className="flex items-center gap-3.5 group">
+            <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-sm group-hover:scale-105 transition-transform border border-slate-200">
+              <img 
+                src={logoIcon} 
+                alt="TechAsset Logo" 
+                className="w-full h-full object-contain" 
+              />
+            </div>
             <div>
               <span className="text-xl font-black tracking-tight text-slate-900 block leading-tight">
                 Tech<span className="text-cyan-600">Asset</span>
@@ -441,11 +443,13 @@ export default function Landing() {
       <footer className="bg-white border-t border-slate-200 py-8 px-6 text-xs text-slate-500">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img 
-              src={logoImg} 
-              alt="TechAsset Logo" 
-              className="w-8 h-8 object-contain rounded-lg shadow-2xs bg-white" 
-            />
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-2xs">
+              <img 
+                src={logoIcon} 
+                alt="TechAsset Logo" 
+                className="w-full h-full object-contain" 
+              />
+            </div>
             <div>
               <p className="font-bold text-slate-800 text-xs">
                 Tech<span className="text-cyan-600">Asset</span> &bull; Innovatech Solutions S.A.C.
